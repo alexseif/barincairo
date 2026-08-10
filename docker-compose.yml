@@ -7,9 +7,9 @@ services:
     container_name: barincairo_db
     restart: always
     environment:
-      POSTGRES_DB: barincairo_db
-      POSTGRES_USER: barincairo_user
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-barincairo_secret_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-barincairo_db}
+      POSTGRES_USER: ${POSTGRES_USER:-barincairo_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -19,7 +19,7 @@ services:
         limits:
           memory: 512M
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U barincairo_user -d barincairo_db"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-barincairo_user} -d ${POSTGRES_DB:-barincairo_db}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -32,8 +32,8 @@ services:
     container_name: barincairo_api
     restart: always
     environment:
-      DATABASE_URL: postgresql+asyncpg://barincairo_user:${POSTGRES_PASSWORD:-barincairo_secret_pass}@db:5432/barincairo_db
-      SECRET_KEY: ${SECRET_KEY:-change_this_in_production}
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-barincairo_user}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-barincairo_db}
+      SECRET_KEY: ${SECRET_KEY}
     depends_on:
       db:
         condition: service_healthy
@@ -51,7 +51,7 @@ services:
     restart: always
     environment:
       NODE_ENV: production
-      NEXT_PUBLIC_API_URL: https://api.barincairo.com
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://api.barincairo.com}
     depends_on:
       - api
     networks:

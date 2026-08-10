@@ -20,7 +20,7 @@
 
 ### 2.1 Secrets & Credentials Management
 - **Zero Credentials in Version Control**: `.env` files, API keys, database passwords, and SSH keys must NEVER be committed.
-- **Environment Template**: Maintain a sanitized `.env.example` in the repository containing dummy keys.
+- **Environment Template**: Maintain a sanitized `.env.example` in the repository containing dummy keys. `docker-compose.yml` must read variables exclusively from `.env`.
 - **Automated Scanning**: Enforce GitHub Secret Scanning or `gitleaks` in the CI/CD pipeline to block accidental key leaks.
 
 ### 2.2 API Security & Network Boundary
@@ -138,22 +138,30 @@ barincairo/
 
 | Category | Do's ✅ | Don'ts ❌ |
 | :--- | :--- | :--- |
-| **Security** | Validate all API inputs via Pydantic; use parameterized GeoAlchemy2 queries. | Never run raw SQL strings; never commit API keys or passwords. |
+| **Security** | Validate all API inputs via Pydantic; use parameterized GeoAlchemy2 queries; read credentials from `.env`. | Never run raw SQL strings; never commit API keys or passwords; never hardcode default pass fallbacks. |
 | **Frontend** | Enforce 44x44px minimum touch targets; use RSC for static HTML; target mobile viewports first. | Never use TypeScript `any`; never mix client state into server components; do not use SaaS rounded radii. |
 | **Backend** | Annotate explicit return types; maintain 100% PEP-8 via `ruff`/`mypy`. | Never bypass Pydantic validation; never expose PostGIS port 5432 to the public internet. |
 | **Git & CI** | Write descriptive conventional commits; test builds before pushing. | Never push directly to `main` without build verification. |
 
 ---
 
-## 7. Next Steps & Agent/Skill Orchestration Plan
+## 7. Planner & Building Agent Token Protocol & Next Steps
 
-After human review and approval of these standards, the project will proceed through two distinct subagent execution phases:
+### 7.1 Planner vs Building Agent Workflow Rules
+1. **Planner Agent Responsibilities**:
+   - Analyze requirements and break down features into explicit, sequential sub-tasks.
+   - Calculate and publish an estimated **Token Cost & Resource Budget** for the task.
+   - Present the breakdown to the user for **Explicit Human Approval** ("Proceed" or feedback) before any Building Agent starts writing code.
+2. **Building Agent Responsibilities**:
+   - Execute approved tasks within the allocated token budget.
+   - Run verification builds (`npm run build`, `pytest`, `mypy`) after every task step.
 
-### Phase 1: Engineering & Infrastructure Build (Agents & Skills)
-- **FastAPI / PostGIS Specialist Agent**: Provision PostgreSQL + PostGIS 3NF database schema, Alembic migrations, and GeoJSON endpoints.
-- **WebGL MapLibre Specialist Agent**: Replace prototype CSS map with MapLibre GL JS vector tiles consuming live GeoJSON streams.
-- **DevOps Engineer Agent**: Finalize Docker Compose orchestration, SSL certificates, and GitHub Actions CD deployment.
+### 7.2 Two-Phase Execution Plan
 
-### Phase 2: Data Ingestion & Content Population (Agents & Skills)
-- **Cairo Content Researcher Agent**: Curate initial 15–20 historic Downtown Cairo establishments, English/Arabic descriptions, and vibe taxonomies.
-- **Spatial Coordinate Verifier Agent**: Cross-reference exact WGS84 lat/lng coordinates against OpenStreetMap/Google Maps for precision PostGIS entry.
+#### Phase 1: Engineering & Infrastructure Build
+- **Subagents**: `backend-specialist` (FastAPI/PostGIS/Alembic), `frontend-specialist` (MapLibre GL JS/RSC), `devops-engineer` (Docker/Nginx/CI).
+- **Deliverables**: Live database migrations, GeoJSON endpoints, WebGL spatial map rendering, and SQLAdmin setup.
+
+#### Phase 2: Data Ingestion & Content Population
+- **Subagents**: `researcher` (Cairo Wust El Balad establishment curation & Arabic metadata), `spatial-verifier` (WGS84 precision coordinate verification).
+- **Deliverables**: Seed dataset of 15–20 Downtown Cairo venues, photo asset optimization, and WhatsApp dispatch integration.

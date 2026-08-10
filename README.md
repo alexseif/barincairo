@@ -8,16 +8,36 @@
 
 **barincairo.com** is a specialized cartographic and cultural index dedicated to the historic establishments, rooftop hideouts, hotel lounges, and backroom cocktail bars of Downtown Cairo. Built with a rich historical aesthetic rejecting sterile SaaS/Material design, the platform combines modern geospatial rendering with 1950s cinematic hand-painted typography and weathered urban cartography.
 
-### Visual Identity & "Osool" (الأصول)
-- **Palette**: Khedivial Limestone (`#ede7d8`), Weathered Concrete (`#b9ae96`), Faded Vintage Gold (`#ad793b`), Deep Nile Green (`#24332d`), and Dark Mahogany.
-- **Typography**: Dual bilingual typography (Arabic & English) featuring serif/script fonts (`Cormorant Garamond`) echoing classic Talaat Harb signage paired with clean monospace/sans-serif (`DM Mono`, `DM Sans`) for spatial precision.
-- **Texture**: Archival cartography styling, custom noise overlay, and linework simulating hand-drawn urban grids.
+---
+
+## 📜 Architectural Standards & Documentation
+
+The project governance and architectural standards are codified across four primary specification files:
+
+1. **[`STANDARDS.md`](./STANDARDS.md)**: Coding standards, security protocols, 3NF database schema, Star Schema analytics analysis, framework directory layouts, and the **Planner/Building Agent token protocol**.
+2. **[`ARCHITECTURE.md`](./ARCHITECTURE.md)**: Technical specs for decoupled Next.js + FastAPI + PostGIS infrastructure, Docker container isolation, SQLAdmin dashboard, host Nginx proxy, and spatial query patterns.
+3. **[`REQUIREMENTS.md`](./REQUIREMENTS.md)**: Functional/non-functional requirements, Web Vitals performance targets ($LCP \le 1.2s$), JSON-LD SEO schemas, `/llm.txt` GEO endpoints, and agent orchestration directives.
+4. **[`README.md`](./README.md)**: Quick start guide, repository layout, and project status.
 
 ---
 
-## 📐 System Architecture
+## 🔐 Security & Environment Configuration
 
-The system is designed as a **decoupled geospatial directory**:
+Zero credentials or secret keys are committed to version control.
+
+1. Copy `.env.example` to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+2. Populate `.env` with strong, generated passwords (`POSTGRES_PASSWORD`, `SECRET_KEY`).
+3. Run container orchestration safely:
+   ```bash
+   docker compose up -d
+   ```
+
+---
+
+## 📐 System Architecture Overview
 
 ```
  ┌─────────────────────────────────────────┐
@@ -28,7 +48,7 @@ The system is designed as a **decoupled geospatial directory**:
             GeoJSON Stream API (HTTPS)
                       │
  ┌────────────────────▼────────────────────┐
- │         Python (FastAPI) Backend        │
+ │  Python (FastAPI) + SQLAdmin Backend    │
  └────────────────────┬────────────────────┘
                       │
                SQL / PostGIS Spatial
@@ -38,42 +58,20 @@ The system is designed as a **decoupled geospatial directory**:
  └─────────────────────────────────────────┘
 ```
 
-- **Frontend**: Next.js 16 (App Router), React 19, Tailwind CSS v4, MapLibre GL JS / Leaflet spatial rendering engine.
-- **Backend API**: Python (FastAPI) serving pure GeoJSON object collections.
-- **Geospatial Engine**: PostgreSQL with PostGIS extension operating under **SRID 4326 (WGS 84)**.
-
-For full architectural details, see [`ARCHITECTURE.md`](./ARCHITECTURE.md).  
-For functional requirements and phase milestones, see [`REQUIREMENTS.md`](./REQUIREMENTS.md).
-
 ---
 
-## 🚀 Quick Start (Frontend Prototype)
+## 🗺️ Dynamic Data Evolution & Agent Protocol
 
-### Prerequisites
-- Node.js 18+
-- `npm` or `pnpm`
+> **Prototype Note**: Phase 1 uses sample static venue data to validate DOM hierarchy, visual tokens, and machine-readable `/llm.txt` endpoints.
 
-### Installation & Execution
+### Two-Phase Agent Orchestration Protocol
+- **Planner Agent**: Responsible for analyzing specifications, creating granular step-by-step tasks, calculating **Token Cost & Resource Estimates**, and obtaining **Human Approval** before any building agent executes code.
+- **Building Agent**: Responsible for executing approved task breakdowns while adhering strictly to token budget constraints and quality gates.
 
-```bash
-# Install dependencies
-npm install
-
-# Run local development server
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) to view the current frontend prototype.
-
----
-
-## 🗺️ Roadmap & Milestones
-
-- [x] **Phase 1: Scaffolding & Visual Scaffolding**: Lock DOM structure, Tailwind CSS tokens, bilingual typography, and responsive layout.
-- [ ] **Phase 2: Database Provisioning**: Spin up PostgreSQL + PostGIS, define spatial schemas, and seed initial 15-20 Wust El Balad locations.
-- [ ] **Phase 3: Python API Construction**: Implement FastAPI endpoints serving GeoJSON streams with bounding box and nearest-neighbor spatial queries.
-- [ ] **Phase 4: Cartographic Integration**: Replace prototype CSS map layer with WebGL MapLibre GL / Leaflet spatial renderer bound to backend endpoints.
-- [ ] **Phase 5: Production & Verification**: Execute type checking, bundle optimization, SEO verification, and launch deployment.
+### Development Roadmap
+- [x] **Phase 1: Scaffolding & Visual Prototype**: DOM structure, CSS tokens, bilingual typography, static `/llm.txt` GEO route, and Docker/CI infrastructure.
+- [ ] **Phase 2: Platform Engineering & Infrastructure Build**: PostGIS 3NF schema, FastAPI GeoJSON streaming API, SQLAdmin dashboard, and WebGL MapLibre GL JS cartography integration.
+- [ ] **Phase 3: Data Ingestion & Content Population**: Historic Downtown venue curation, WGS84 spatial coordinate verification, and WhatsApp community dispatch integration.
 
 ---
 

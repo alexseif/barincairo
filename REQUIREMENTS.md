@@ -1,7 +1,7 @@
 # Requirement & Operational Axioms Specification: BARINCAIRO.COM
 
 **Project Name**: barincairo.com (Bar in Cairo)  
-**Version**: 1.1.0  
+**Version**: 1.2.0  
 **Target Scope**: Downtown Cairo (*Wust El Balad*) — Latitude 30°02′N, Longitude 31°14′E  
 
 ---
@@ -11,7 +11,8 @@
 - **SEC-1.1 (Zero-Trust Data Ingestion)**: All spatial coordinates, JSON inputs, and string data entering the Python (FastAPI) backend must be mathematically validated via Pydantic schemas. Malformed payloads must be rejected with HTTP 422 immediately.
 - **SEC-1.2 (SQL Injection Immunity)**: Direct raw SQL string execution is strictly prohibited. All spatial operations must execute through GeoAlchemy2 parameterized ORM methods.
 - **SEC-1.3 (Network Isolation)**: Next.js frontend to FastAPI communication occurs strictly via the internal Docker bridge network (`barincairo_net`). PostGIS must be bound exclusively to `127.0.0.1` / internal container interfaces and never exposed externally.
-- **SEC-1.4 (Token-Bucket Rate Limiting)**: Implement token-bucket rate limiting on all public GeoJSON and venue endpoints to prevent scraping bots from consuming server resources.
+- **SEC-1.4 (Zero-Secrets in Code Control)**: No hardcoded database passwords, secret keys, or credentials are allowed in source code or `docker-compose.yml`. Secrets must be loaded exclusively via `.env` configured from `.env.example`.
+- **SEC-1.5 (Token-Bucket Rate Limiting)**: Implement token-bucket rate limiting on all public GeoJSON and venue endpoints to prevent scraping bots from consuming server resources.
 
 ---
 
@@ -54,14 +55,30 @@
 
 ---
 
-## 7. Dark Social & Physical Street Protocol
+## 7. Next Steps & Agent/Skill Orchestration Plan
 
-- **PHYS-7.1 (WhatsApp Dispatch Conversion)**: The primary subscriber funnel is routed through WhatsApp direct messaging instead of email.
-- **PHYS-7.2 (NFC & QR Street Integration)**: Physical NFC tags and QR codes in Downtown venues route patrons directly to individual venue URLs on `barincairo.com` to drive high-intent direct search traffic.
+The project development must follow a two-phase agent orchestration plan:
+
+### Phase 1: Engineering & Infrastructure Build (Agents & Skills)
+- **FastAPI / PostGIS Specialist Agent**: Provision PostgreSQL + PostGIS 3NF database schema, Alembic migrations, and GeoJSON endpoints.
+- **WebGL MapLibre Specialist Agent**: Replace prototype CSS map with MapLibre GL JS vector tiles consuming live GeoJSON streams.
+- **DevOps Engineer Agent**: Finalize Docker Compose orchestration, SSL certificates, and GitHub Actions CD deployment.
+
+### Phase 2: Data Ingestion & Content Population (Agents & Skills)
+- **Cairo Content Researcher Agent**: Curate initial 15–20 historic Downtown Cairo establishments, English/Arabic descriptions, and vibe taxonomies.
+- **Spatial Coordinate Verifier Agent**: Cross-reference exact WGS84 lat/lng coordinates against OpenStreetMap/Google Maps for precision PostGIS entry.
 
 ---
 
-## 8. The Immutable Aesthetic Matrix (System Directive for UI Subagents)
+## 8. Planner & Building Agent Protocol (Cost & Approval Rule)
+
+- **PLN-8.1 (Mandatory Task Breakdown)**: Before any code is written or modified, a **Planner Agent** must break down the scope into clear, atomic, sub-task steps.
+- **PLN-8.2 (Token & Resource Estimate)**: The Planner Agent must calculate and disclose an estimated token cost and resource scope for both Phase 1 (Engineering Build) and Phase 2 (Data Ingestion).
+- **PLN-8.3 (Human Approval Gate)**: A Building Agent is **forbidden** from executing commands or creating files until explicit human approval ("Proceed", "Yes", or approved option) is granted.
+
+---
+
+## 9. The Immutable Aesthetic Matrix (System Directive for UI Subagents)
 
 Future LLM subagents and developers modifying frontend UI files are bound to the following system directive:
 
