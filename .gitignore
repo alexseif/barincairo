@@ -18,9 +18,15 @@ yarn-error.log*
 
 # env files
 .env*
+!.env.example
 
 # vercel
 .vercel
+
+# python
+__pycache__/
+*.pyc
+.pytest_cache/
 
 # typescript
 *.tsbuildinfo
