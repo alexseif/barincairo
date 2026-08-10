@@ -1,0 +1,71 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --font-sans: 'DM Sans', 'Arial', sans-serif;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-mono: 'DM Mono', monospace;
+}
+
+:root {
+  color-scheme: light;
+  --background: #ede7d8;
+  --foreground: #24332d;
+  --card: #d9cfb8;
+  --card-foreground: #24332d;
+  --primary: #24332d;
+  --primary-foreground: #ede7d8;
+  --secondary: #c7bca4;
+  --secondary-foreground: #24332d;
+  --muted: #ded6c4;
+  --muted-foreground: #657067;
+  --accent: #ad793b;
+  --accent-foreground: #ede7d8;
+  --border: #b9ae96;
+  --input: #b9ae96;
+  --ring: #ad793b;
+  --radius: 0rem;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; background: var(--background); }
+body { margin: 0; background: var(--background); color: var(--foreground); }
+button, a { cursor: pointer; }
+
+.map-grid {
+  background-image: linear-gradient(to right, rgba(36,51,45,.26) 1px, transparent 1px), linear-gradient(to bottom, rgba(36,51,45,.26) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+.street { position: absolute; height: 1px; background: rgba(36,51,45,.42); transform-origin: left center; }
+.street-one { width: 115%; left: -4%; top: 46%; transform: rotate(-18deg); }
+.street-two { width: 95%; left: 10%; top: 28%; transform: rotate(31deg); }
+.street-three { width: 80%; left: 25%; top: 72%; transform: rotate(8deg); }
+.street-four { width: 65%; left: 40%; top: 10%; transform: rotate(83deg); }
+.street-five { width: 68%; left: 3%; top: 79%; transform: rotate(-54deg); }
+.river { border-left: 1px solid rgba(36,51,45,.16); border-right: 1px solid rgba(36,51,45,.16); }
+
+@media (prefers-reduced-motion: no-preference) {
+  a, button { transition: color .2s ease, background-color .2s ease, border-color .2s ease, transform .2s ease; }
+}
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+}
