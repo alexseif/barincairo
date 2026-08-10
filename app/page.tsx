@@ -25,7 +25,7 @@ const PRICE_FILTERS = [
 
 export default function Home() {
   const [venuesData, setVenuesData] = useState<GeoJSONFeatureCollection>(FALLBACK_VENUES)
-  const [selectedFeature, setSelectedFeature] = useState<GeoJSONFeature>(FALLBACK_VENUES.features[0])
+  const [selectedFeature, setSelectedFeature] = useState<GeoJSONFeature | null>(null)
   const [activeVibeFilter, setActiveVibeFilter] = useState('all')
   const [activePriceFilter, setActivePriceFilter] = useState('all')
   
@@ -44,6 +44,8 @@ export default function Home() {
       setVenuesData(data)
       if (data.features.length > 0) {
         setSelectedFeature(data.features[0])
+      } else {
+        setSelectedFeature(null)
       }
       setLoading(false)
     }
