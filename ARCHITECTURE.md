@@ -63,8 +63,8 @@ CREATE TABLE bar_hops (
 -- Subscriptions / Registration Funnel
 CREATE TABLE subscribers (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    email VARCHAR(255) UNIQUE NOT NULL,
-    source VARCHAR(50) DEFAULT 'web_dispatch',
+    whatsapp_number VARCHAR(50) UNIQUE NOT NULL,
+    source VARCHAR(50) DEFAULT 'whatsapp_dispatch',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 ```

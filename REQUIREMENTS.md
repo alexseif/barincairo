@@ -33,7 +33,7 @@
 - **FR-4.2**: Users must have access to a registration interest funnel for upcoming bar hop events.
 
 ### 1.5 Subscriptions & Dispatch
-- **FR-5.1**: An asynchronous POST form must accept email addresses for newsletter notifications.
+- **FR-5.1**: An asynchronous POST form must accept WhatsApp phone numbers for direct message notifications and dispatch updates.
 - **FR-5.2**: The UI must display an instant feedback state upon successful subscription ("You’re on the list. Ahla wa sahla.").
 
 ### 1.6 Future Scope (Dormant Module)

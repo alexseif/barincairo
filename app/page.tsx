@@ -19,12 +19,12 @@ const attractions = [
 export default function Home() {
   const [selected, setSelected] = useState(bars[1])
   const [mobileNav, setMobileNav] = useState(false)
-  const [email, setEmail] = useState('')
+  const [whatsapp, setWhatsapp] = useState('')
   const [subscribed, setSubscribed] = useState(false)
 
   function handleSubscribe(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (email.trim()) setSubscribed(true)
+    if (whatsapp.trim()) setSubscribed(true)
   }
 
   return (
@@ -39,7 +39,7 @@ export default function Home() {
             <a href="#map" className="text-muted-foreground transition-colors hover:text-primary">Explore the map</a>
             <a href="#bar-hops" className="text-muted-foreground transition-colors hover:text-primary">Bar hops</a>
             <a href="#about" className="text-muted-foreground transition-colors hover:text-primary">Our guide</a>
-            <a href="#subscribe" className="border border-primary px-4 py-2 text-primary transition-colors hover:bg-primary hover:text-primary-foreground">Get the list <ArrowUpRight className="ml-1 inline size-3" /></a>
+            <a href="#subscribe" className="border border-primary px-4 py-2 text-primary transition-colors hover:bg-primary hover:text-primary-foreground">WhatsApp Dispatch <ArrowUpRight className="ml-1 inline size-3" /></a>
           </nav>
           <button className="md:hidden" onClick={() => setMobileNav(!mobileNav)} aria-label={mobileNav ? 'Close menu' : 'Open menu'}>{mobileNav ? <X /> : <Menu />}</button>
         </div>
@@ -82,7 +82,7 @@ export default function Home() {
 
       <section id="bar-hops" className="border-y border-primary/25 bg-primary px-5 py-16 text-primary-foreground lg:px-10 lg:py-24"><div className="mx-auto grid max-w-[1440px] gap-10 lg:grid-cols-[1fr_1fr] lg:items-center"><div><p className="mb-5 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-accent"><Sparkles className="size-3" /> Coming up next</p><h2 className="font-serif text-5xl leading-[0.88] tracking-[-0.06em] lg:text-7xl">Don’t go home<br /><em className="font-normal text-accent">just yet.</em></h2></div><div className="max-w-lg lg:justify-self-end"><p className="mb-6 font-serif text-xl leading-relaxed text-primary-foreground/80">Join a small group of curious people as we follow a handpicked trail through Downtown’s after-hours institutions.</p><div className="flex flex-wrap gap-4 font-mono text-[10px] uppercase tracking-[0.16em] text-primary-foreground/70"><span className="flex items-center gap-2"><Clock3 className="size-4 text-accent" /> 4 hours</span><span className="flex items-center gap-2"><MapPin className="size-4 text-accent" /> 4 stops</span><a href="#subscribe" className="flex items-center gap-2 text-accent hover:text-primary-foreground">Register interest <ArrowUpRight className="size-3" /></a></div></div></div></section>
 
-      <section id="subscribe" className="mx-auto grid max-w-[1440px] gap-10 px-5 py-16 lg:grid-cols-[0.7fr_1.3fr] lg:px-10 lg:py-24"><div><p className="mb-4 font-mono text-[10px] uppercase tracking-[0.2em] text-accent">The dispatch</p><h2 className="font-serif text-5xl leading-[0.9] tracking-[-0.06em] text-primary lg:text-6xl">Know where<br /><em className="font-normal">to go next.</em></h2></div><div className="flex max-w-xl flex-col justify-end gap-6 lg:justify-self-end"><p className="font-serif text-xl leading-relaxed text-primary/80">New openings, old favourites, and the occasional invitation. One thoughtful note, never noise.</p>{subscribed ? <p className="border-b border-primary py-4 font-mono text-[10px] uppercase tracking-[0.16em] text-accent">You’re on the list. Ahla wa sahla.</p> : <form onSubmit={handleSubscribe} className="flex border-b border-primary py-2"><label htmlFor="email" className="sr-only">Your email address</label><input id="email" type="email" required value={email} onChange={(event) => setEmail(event.target.value)} placeholder="Your email address" className="min-w-0 flex-1 bg-transparent font-serif text-lg text-primary outline-none placeholder:text-muted-foreground" /><button type="submit" className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-accent hover:text-primary">Subscribe <ArrowUpRight className="size-3" /></button></form>}</div></section>
+      <section id="subscribe" className="mx-auto grid max-w-[1440px] gap-10 px-5 py-16 lg:grid-cols-[0.7fr_1.3fr] lg:px-10 lg:py-24"><div><p className="mb-4 font-mono text-[10px] uppercase tracking-[0.2em] text-accent">WhatsApp Dispatch</p><h2 className="font-serif text-5xl leading-[0.9] tracking-[-0.06em] text-primary lg:text-6xl">Know where<br /><em className="font-normal">to go next.</em></h2></div><div className="flex max-w-xl flex-col justify-end gap-6 lg:justify-self-end"><p className="font-serif text-xl leading-relaxed text-primary/80">New openings, old favourites, and the occasional invitation directly to your WhatsApp. One thoughtful note, never noise.</p>{subscribed ? <p className="border-b border-primary py-4 font-mono text-[10px] uppercase tracking-[0.16em] text-accent">You’re on the WhatsApp dispatch. Ahla wa sahla.</p> : <form onSubmit={handleSubscribe} className="flex border-b border-primary py-2"><label htmlFor="whatsapp" className="sr-only">Your WhatsApp number</label><input id="whatsapp" type="tel" required value={whatsapp} onChange={(event) => setWhatsapp(event.target.value)} placeholder="WhatsApp number (e.g. +20 100 000 0000)" className="min-w-0 flex-1 bg-transparent font-serif text-lg text-primary outline-none placeholder:text-muted-foreground" /><button type="submit" className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-accent hover:text-primary">Subscribe <ArrowUpRight className="size-3" /></button></form>}</div></section>
 
       <footer id="about" className="border-t border-border px-5 py-8 lg:px-10"><div className="mx-auto flex max-w-[1440px] flex-col justify-between gap-5 sm:flex-row sm:items-center"><span className="font-serif text-lg font-semibold tracking-[-0.04em] text-primary">bar<span className="text-accent">in</span>cairo</span><p className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground">Made for the curious · Cairo, Egypt · 2026</p><a href="#top" className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground hover:text-primary">Back to top <ChevronDown className="ml-1 inline size-3 rotate-180" /></a></div></footer>
     </main>
