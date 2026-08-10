@@ -1,7 +1,7 @@
 # Requirement & Operational Axioms Specification: BARINCAIRO.COM
 
 **Project Name**: barincairo.com (Bar in Cairo)  
-**Version**: 1.2.0  
+**Version**: 1.3.0  
 **Target Scope**: Downtown Cairo (*Wust El Balad*) — Latitude 30°02′N, Longitude 31°14′E  
 
 ---
@@ -55,7 +55,14 @@
 
 ---
 
-## 7. Next Steps & Agent/Skill Orchestration Plan
+## 7. Session Resume & Agent Execution Protocol
+
+- **SER-7.1 (Trigger Recognition)**: When a new agent session is initialized, the trigger prompt `"Proceed with Phase 1 Planning"` (or `/plan`) instructs the agent to enter Planner Agent mode.
+- **SER-7.2 (Mandatory Task & Token Estimate)**: The Planner Agent must parse `REQUIREMENTS.md` and `STANDARDS.md`, create an atomic task list, calculate **Token Cost & Resource Estimates**, and request **Human Approval** before any building agent executes code.
+
+---
+
+## 8. Next Steps & Agent/Skill Orchestration Plan
 
 The project development must follow a two-phase agent orchestration plan:
 
@@ -70,15 +77,15 @@ The project development must follow a two-phase agent orchestration plan:
 
 ---
 
-## 8. Planner & Building Agent Protocol (Cost & Approval Rule)
+## 9. Planner & Building Agent Protocol (Cost & Approval Rule)
 
-- **PLN-8.1 (Mandatory Task Breakdown)**: Before any code is written or modified, a **Planner Agent** must break down the scope into clear, atomic, sub-task steps.
-- **PLN-8.2 (Token & Resource Estimate)**: The Planner Agent must calculate and disclose an estimated token cost and resource scope for both Phase 1 (Engineering Build) and Phase 2 (Data Ingestion).
-- **PLN-8.3 (Human Approval Gate)**: A Building Agent is **forbidden** from executing commands or creating files until explicit human approval ("Proceed", "Yes", or approved option) is granted.
+- **PLN-9.1 (Mandatory Task Breakdown)**: Before any code is written or modified, a **Planner Agent** must break down the scope into clear, atomic, sub-task steps.
+- **PLN-9.2 (Token & Resource Estimate)**: The Planner Agent must calculate and disclose an estimated token cost and resource scope for both Phase 1 (Engineering Build) and Phase 2 (Data Ingestion).
+- **PLN-9.3 (Human Approval Gate)**: A Building Agent is **forbidden** from executing commands or creating files until explicit human approval ("Proceed", "Yes", or approved option) is granted.
 
 ---
 
-## 9. The Immutable Aesthetic Matrix (System Directive for UI Subagents)
+## 10. The Immutable Aesthetic Matrix (System Directive for UI Subagents)
 
 Future LLM subagents and developers modifying frontend UI files are bound to the following system directive:
 

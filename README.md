@@ -12,12 +12,12 @@
 
 ## 📜 Architectural Standards & Documentation
 
-The project governance and architectural standards are codified across four primary specification files:
+The project governance and architectural standards are codified across primary specification files:
 
-1. **[`STANDARDS.md`](./STANDARDS.md)**: Coding standards, security protocols, 3NF database schema, Star Schema analytics analysis, framework directory layouts, and the **Planner/Building Agent token protocol**.
-2. **[`ARCHITECTURE.md`](./ARCHITECTURE.md)**: Technical specs for decoupled Next.js + FastAPI + PostGIS infrastructure, Docker container isolation, SQLAdmin dashboard, host Nginx proxy, and spatial query patterns.
-3. **[`REQUIREMENTS.md`](./REQUIREMENTS.md)**: Functional/non-functional requirements, Web Vitals performance targets ($LCP \le 1.2s$), JSON-LD SEO schemas, `/llm.txt` GEO endpoints, and agent orchestration directives.
-4. **[`README.md`](./README.md)**: Quick start guide, repository layout, and project status.
+1. **[`DEPLOYMENT.md`](./DEPLOYMENT.md)**: Secure Ubuntu server setup guide, host co-location safety (WordPress/Symfony protection), and GitHub Actions SSH deployment configuration.
+2. **[`STANDARDS.md`](./STANDARDS.md)**: Coding standards, security protocols, 3NF database schema, Star Schema analytics analysis, framework directory layouts, and the **Planner/Building Agent token protocol**.
+3. **[`ARCHITECTURE.md`](./ARCHITECTURE.md)**: Technical specs for decoupled Next.js + FastAPI + PostGIS infrastructure, Docker container isolation, SQLAdmin dashboard, host Nginx proxy, and spatial query patterns.
+4. **[`REQUIREMENTS.md`](./REQUIREMENTS.md)**: Functional/non-functional requirements, Web Vitals performance targets ($LCP \le 1.2s$), JSON-LD SEO schemas, `/llm.txt` GEO endpoints, and agent orchestration directives.
 
 ---
 
@@ -60,16 +60,15 @@ Zero credentials or secret keys are committed to version control.
 
 ---
 
-## 🗺️ Dynamic Data Evolution & Agent Protocol
+## 🤖 Session Resume & Agent Execution Directive
 
-> **Prototype Note**: Phase 1 uses sample static venue data to validate DOM hierarchy, visual tokens, and machine-readable `/llm.txt` endpoints.
+When starting a new session or resuming work on this codebase, AI Agents must adhere to the following protocol:
 
-### Two-Phase Agent Orchestration Protocol
-- **Planner Agent**: Responsible for analyzing specifications, creating granular step-by-step tasks, calculating **Token Cost & Resource Estimates**, and obtaining **Human Approval** before any building agent executes code.
-- **Building Agent**: Responsible for executing approved task breakdowns while adhering strictly to token budget constraints and quality gates.
+- **Phase 1 Planning Trigger**: The user prompt `"Proceed with Phase 1 Planning"` (or `/plan`) triggers the **Planner Agent**.
+- **Planner Agent Protocol**: The Planner Agent must parse the specifications, break Phase 1 into sequential tasks, estimate **Token Cost & Resource Scope**, and obtain explicit **Human Approval** before any Building Agent starts coding.
 
 ### Development Roadmap
-- [x] **Phase 1: Scaffolding & Visual Prototype**: DOM structure, CSS tokens, bilingual typography, static `/llm.txt` GEO route, and Docker/CI infrastructure.
+- [x] **Phase 1: Scaffolding & Visual Prototype**: DOM structure, CSS tokens, bilingual typography, static `/llm.txt` GEO route, and Docker/CI deployment guide.
 - [ ] **Phase 2: Platform Engineering & Infrastructure Build**: PostGIS 3NF schema, FastAPI GeoJSON streaming API, SQLAdmin dashboard, and WebGL MapLibre GL JS cartography integration.
 - [ ] **Phase 3: Data Ingestion & Content Population**: Historic Downtown venue curation, WGS84 spatial coordinate verification, and WhatsApp community dispatch integration.
 
