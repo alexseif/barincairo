@@ -1,0 +1,139 @@
+'use client'
+
+import { useEffect, useRef, useState } from 'react'
+import type { GeoJSONFeature, GeoJSONFeatureCollection } from '@/lib/api'
+
+interface MapProps {
+  venues: GeoJSONFeatureCollection
+  selectedVenue: GeoJSONFeature | null
+  onSelectVenue: (venue: GeoJSONFeature) => void
+}
+
+const DOWNTOWN_CAIRO_CENTER: [number, number] = [31.2389, 30.0444]
+
+export default function MapLibreMap({ venues, selectedVenue, onSelectVenue }: MapProps) {
+  const mapContainer = useRef<HTMLDivElement>(null)
+  const mapRef = useRef<any>(null)
+  const [mapLoaded, setMapLoaded] = useState(false)
+
+  useEffect(() => {
+    if (!mapContainer.current || mapRef.current) return
+
+    let isMounted = true
+
+    async function initMap() {
+      try {
+        const maplibre = await import('maplibre-gl')
+        import('maplibre-gl/dist/maplibre-gl.css')
+
+        if (!isMounted || !mapContainer.current) return
+
+        const map = new maplibre.Map({
+          container: mapContainer.current,
+          style: {
+            version: 8,
+            name: 'Khedivial Vintage Cairo',
+            sources: {
+              'osm-tiles': {
+                type: 'raster',
+                tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+                tileSize: 256,
+                attribution: '© OpenStreetMap contributors',
+              },
+            },
+            layers: [
+              {
+                id: 'osm-tiles-layer',
+                type: 'raster',
+                source: 'osm-tiles',
+                minzoom: 0,
+                maxzoom: 19,
+                paint: {
+                  'raster-opacity': 0.45,
+                  'raster-contrast': 0.15,
+                  'raster-saturation': -0.75,
+                },
+              },
+            ],
+          },
+          center: DOWNTOWN_CAIRO_CENTER,
+          zoom: 14.5,
+          pitch: 0,
+        })
+
+        map.addControl(new maplibre.NavigationControl({ showCompass: false }), 'bottom-right')
+
+        map.on('load', () => {
+          if (!isMounted) return
+          mapRef.current = map
+          setMapLoaded(true)
+        })
+      } catch (err) {
+        console.warn('WebGL MapLibre init fallback mode active:', err)
+      }
+    }
+
+    initMap()
+
+    return () => {
+      isMounted = false
+      if (mapRef.current) {
+        mapRef.current.remove()
+        mapRef.current = null
+      }
+    }
+  }, [])
+
+  // Sync Markers on Map loaded
+  useEffect(() => {
+    if (!mapLoaded || !mapRef.current) return
+
+    const map = mapRef.current
+
+    // Add markers dynamically
+    venues.features.forEach((feature) => {
+      const [lng, lat] = feature.geometry.coordinates
+
+      const el = document.createElement('div')
+      el.className = 'group relative cursor-pointer focus:outline-none'
+      el.style.width = '44px'
+      el.style.height = '44px'
+      el.style.display = 'flex'
+      el.style.alignItems = 'center'
+      el.style.justifyContent = 'center'
+
+      const isSelected = selectedVenue?.properties.id === feature.properties.id
+
+      el.innerHTML = `
+        <div class="relative flex items-center justify-center transition-transform duration-200 group-hover:scale-125 ${
+          isSelected ? 'scale-125 z-20' : 'z-10'
+        }">
+          <span class="block size-6 rounded-full border-2 border-[#ede7d8] bg-[#ad793b] shadow-[0_2px_0_#24332d]">
+            <span class="absolute inset-1 rounded-full border border-[#24332d]/60"></span>
+          </span>
+        </div>
+      `
+
+      el.addEventListener('click', () => {
+        onSelectVenue(feature)
+        map.flyTo({ center: [lng, lat], zoom: 15.5, duration: 1000 })
+      })
+
+      import('maplibre-gl').then((maplibre) => {
+        new maplibre.Marker({ element: el }).setLngLat([lng, lat]).addTo(map)
+      })
+    })
+  }, [mapLoaded, venues, selectedVenue, onSelectVenue])
+
+  return (
+    <div className="relative aspect-[1.1/1] overflow-hidden border border-primary/20 bg-[#d1c5a8] sm:aspect-[1.8/1] lg:aspect-[2.2/1]">
+      <div ref={mapContainer} className="h-full w-full" />
+      <span className="pointer-events-none absolute left-4 top-4 z-10 font-mono text-[9px] uppercase tracking-[0.2em] text-primary/80 bg-background/80 px-2 py-1 border border-primary/20">
+        Downtown Cairo · WebGL Map
+      </span>
+      <span className="pointer-events-none absolute bottom-4 right-4 z-10 font-serif text-lg italic text-primary/80 bg-background/80 px-2 py-0.5 border border-primary/20">
+        القاهرة
+      </span>
+    </div>
+  )
+}
