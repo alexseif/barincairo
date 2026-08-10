@@ -2,7 +2,7 @@
 
 **System Type**: Decoupled Geospatial Directory & Community Routing Platform  
 **Target Region**: Downtown Cairo (*Wust El Balad*) — Latitude 30°02′N, Longitude 31°14′E  
-**Status**: Draft / Active Architecture  
+**Status**: Active Architecture Specification  
 
 ---
 
@@ -90,15 +90,18 @@ CREATE TABLE subscribers (
 
 ---
 
-## 3. Backend Runtime Specification (Python FastAPI)
+## 3. Backend Runtime & Admin Panel Specification (FastAPI + SQLAdmin)
 
-- **Framework**: FastAPI / AsyncPG (or GeoDjango)
-- **Serialization**: `pydantic-geojson` / Native GeoJSON response builders.
+- **Framework**: Python FastAPI + AsyncPG + GeoAlchemy2.
+- **Admin Panel**: **SQLAdmin** / **Starlette-Admin** mounted directly at `/admin`.
+  - *Engineering Rationale*: Eliminates bespoke React admin development cycles. Automatically generates responsive CRUD views for `Venue`, `BarHop`, and `Subscriber` models.
+  - *Spatial Input Mitigation*: Custom latitude/longitude float helpers are exposed in the view model to automatically generate PostGIS `Point(lng lat)` geometries without requiring manual WKT string entry.
 - **Endpoints**:
   - `GET /api/v1/venues?bbox={xmin},{ymin},{xmax},{ymax}`: Stream GeoJSON vector data.
   - `GET /api/v1/venues/{slug}`: Detailed establishment metadata.
   - `GET /api/v1/hops`: Retrieve curated bar hop routes.
-  - `POST /api/v1/subscribe`: Asynchronous dispatch registration.
+  - `POST /api/v1/subscribe`: Asynchronous WhatsApp registration.
+  - `GET/POST /admin`: SQLAdmin dashboard.
 
 ---
 
@@ -123,7 +126,24 @@ CREATE TABLE subscribers (
 | **Card Background** | `#d9cfb8` | Elevated listing detail panels |
 | **Muted Text** | `#657067` | Secondary data labels, coordinates |
 
-### Typography Guidelines
-- **Primary Script & Serif**: `Cormorant Garamond` (replacing 1950s cinematic hand-painted signage for headings and branding).
-- **Geospatial & Technical**: `DM Mono` (coordinates, timestamps, tags, filter toggles).
-- **Body & UI**: `DM Sans` / Arabic typography support.
+---
+
+## 6. Infrastructure Isolation & Containerization (Docker)
+
+- **Isolation Strategy**: All components run within an isolated Docker network (`barincairo_net`) managed by `docker-compose.yml`.
+- **Co-location Safety**: Prevents runtime or library conflicts with host-level WordPress and Symfony applications.
+- **Services**:
+  - `barincairo_db`: `postgis/postgis:15-3.3-alpine` (Internal port 5432, 512MB RAM cap).
+  - `barincairo_api`: Python FastAPI + SQLAdmin (Local port 127.0.0.1:8000).
+  - `barincairo_frontend`: Next.js 16 standalone server (Local port 127.0.0.1:3000).
+- **Host Reverse Proxy**: Host-level Nginx (`nginx.conf.example`) handles SSL termination via Let's Encrypt and proxies `barincairo.com` to `127.0.0.1:3000` and `api.barincairo.com` to `127.0.0.1:8000`.
+
+---
+
+## 7. CI/CD Pipeline & Deployment Strategy
+
+- **Automated Trigger**: GitHub Actions workflow (`.github/workflows/deploy.yml`) on push to `main`.
+- **Pipeline Workflow**:
+  1. Automated linting and Next.js build verification in GitHub runner.
+  2. SSH authentication into host server.
+  3. Git pull and container redeployment via `docker compose up -d --build`.

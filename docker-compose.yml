@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  # --- PostGIS Database ---
+  db:
+    image: postgis/postgis:15-3.3-alpine
+    container_name: barincairo_db
+    restart: always
+    environment:
+      POSTGRES_DB: barincairo_db
+      POSTGRES_USER: barincairo_user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-barincairo_secret_pass}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - barincairo_net
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U barincairo_user -d barincairo_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # --- Python FastAPI Backend + SQLAdmin ---
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: barincairo_api
+    restart: always
+    environment:
+      DATABASE_URL: postgresql+asyncpg://barincairo_user:${POSTGRES_PASSWORD:-barincairo_secret_pass}@db:5432/barincairo_db
+      SECRET_KEY: ${SECRET_KEY:-change_this_in_production}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - barincairo_net
+    ports:
+      - "127.0.0.1:8000:8000"
+
+  # --- Next.js Frontend ---
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: barincairo_frontend
+    restart: always
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: https://api.barincairo.com
+    depends_on:
+      - api
+    networks:
+      - barincairo_net
+    ports:
+      - "127.0.0.1:3000:3000"
+
+networks:
+  barincairo_net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
