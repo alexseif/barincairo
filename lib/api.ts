@@ -11,7 +11,7 @@ export interface VenueProperties {
   vibe_description?: string
   photo_url?: string
   category_slug: string
-  category_name: str
+  category_name: string
   vibes: string[]
 }
 
