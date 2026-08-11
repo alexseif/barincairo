@@ -13,7 +13,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN mkdir -p public
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN npm run build
+RUN --network=host npm run build
 
 # --- Runner ---
 FROM base AS runner
