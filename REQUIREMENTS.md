@@ -71,15 +71,24 @@
 
 ---
 
-## 8. Immediate Feature Elicitation Requirements
+## 8. Planner & Building Agent Protocol (Cost, Ambiguity & Approval Rules)
 
-- **REQ-8.1 (Interactive Map Selection & Custom Khedivial Tooltip Card)**:
+- **PLN-8.1 (Mandatory Task Breakdown)**: Before any code is written or modified, a **Planner Agent** must break down the scope into clear, atomic, sub-task steps.
+- **PLN-8.2 (Token & Resource Estimate)**: The Planner Agent must calculate and disclose an estimated token cost and resource scope for both Phase 1 (Engineering Build) and Phase 2 (Data Ingestion).
+- **PLN-8.3 (Human Approval Gate)**: A Building Agent is **forbidden** from executing commands or creating files until explicit human approval ("Proceed", "Yes", or approved option) is granted.
+- **PLN-8.4 (Ambiguity & Explicit Assumptions Gate)**: Any AI agent or subagent encountering architectural, design, or requirement ambiguity MUST immediately halt execution, explicitly state all underlying assumptions, present at least two viable implementation options with trade-offs, and wait for human decision before writing code or making modifications.
+
+---
+
+## 9. Immediate Feature Elicitation Requirements
+
+- **REQ-9.1 (Interactive Map Selection & Custom Khedivial Tooltip Card)**:
   - **Behavior**: Clicking any venue pin on the map container must display a custom-styled popup/tooltip card.
   - **Aesthetic Alignment**: The popup must adhere to the Khedivial design matrix (`#ede7d8` limestone background, `#24332d` mahogany border, `#ad793b` gold accent linework, 44px minimum touch targets).
   - **Content**: Displays thumbnail photo, Arabic name (`name_ar`), localized name (`translations[lang].name`), vibe tags, price range (`$`–`$$$`), and a CTA link to the venue page.
   - **Architectural Trade-off**: MapLibre native canvas `Popup` vs. a responsive docked bottom card on mobile devices.
 
-- **REQ-8.2 (Multilingual Data Architecture & Extensible i18n Strategy)**:
+- **REQ-9.2 (Multilingual Data Architecture & Extensible i18n Strategy)**:
   - **Axiom**: Arabic (`_ar`) is the native language of Downtown Cairo (*Wust El Balad*) and is **always present** across all venues.
   - **Database & Payload Schema**:
     - Primary Arabic attributes: `name_ar`, `description_ar`, `address_ar`, `vibe_description_ar`.
@@ -93,27 +102,27 @@
       ```
   - **Performance**: Prevents schema alteration when adding future languages (e.g. Dutch `nl`, French `fr`) while keeping queries hyper-performant.
 
-- **REQ-8.3 (Vibe & Price Filter Integration)**:
+- **REQ-9.3 (Vibe & Price Filter Integration)**:
   - **UI Control**: Filter pills for Vibe (`all`, `fancy`, `ambient-music`, `live-performance`, `oud-player`, `old-times`, `dancy`, `flirty`) and Price Range (`all`, `$`, `$$`, `$$$`) positioned above the map container.
   - **Client/Server Contract**: Changing filters triggers instant client-side MapLibre marker updates and re-renders the venue list without full page reloads.
 
-- **REQ-8.4 (User Geolocation & Map Recenter Control)**:
+- **REQ-9.4 (User Geolocation & Map Recenter Control)**:
   - **GPS Indicator**: Leverage Browser Geolocation API (`navigator.geolocation`) to render the user's current spatial position as a pulsing gold/emerald pin.
   - **Control Placement**: Add a dedicated "Center on My Location" button positioned directly above the MapLibre zoom controls (`+` / `-`) on the bottom-right corner of the map.
 
-- **REQ-8.5 (Dedicated Venue Detail Pages `/venues/[slug]`)**:
+- **REQ-9.5 (Dedicated Venue Detail Pages `/venues/[slug]`)**:
   - Pre-compiled Next.js static pages for all 15 establishments featuring bilingual descriptions, opening hours, photo galleries, navigation links, and `BarOrPub` JSON-LD schemas.
 
-- **REQ-8.6 (WhatsApp Bar Hop / Bar Crawl Subscription API)**:
+- **REQ-9.6 (WhatsApp Bar Hop / Bar Crawl Subscription API)**:
   - Connect the subscription form to a dedicated backend endpoint for broadcasting curated weekend bar crawls and dispatch alerts to WhatsApp subscribers.
 
 ---
 
-## 9. Harness-Friendly AI Subagents & Skills Specification
+## 10. Harness-Friendly AI Subagents & Skills Specification
 
 To enable any autonomous AI agent harness (Antigravity CLI, Gemini-Kit, Claude Code, AutoGen, CrewAI) to execute content ingestion, research, and translation deterministically, subagents are defined as structured harnesses:
 
-### 9.1 Subagent: `cairo-content-researcher`
+### 10.1 Subagent: `cairo-content-researcher`
 - **Role**: Cultural & Archival Data Researcher for Downtown Cairo Establishments.
 - **Task**: Conduct deep archival and web research on historic Downtown Cairo bars, cafes, and rooftops.
 - **Tools Needed**: `search_web`, `read_url_content`, `view_file`, `write_to_file`.
@@ -134,7 +143,7 @@ To enable any autonomous AI agent harness (Antigravity CLI, Gemini-Kit, Claude C
   verification_gate: "Must cite at least 2 independent historical or architectural references."
   ```
 
-### 9.2 Subagent: `spatial-coordinate-verifier`
+### 10.2 Subagent: `spatial-coordinate-verifier`
 - **Role**: GIS Spatial Precision & Geocoding Specialist.
 - **Task**: Verify exact WGS84 latitude/longitude coordinates and street addresses for establishments in Downtown Cairo.
 - **Tools Needed**: `search_web`, `read_url_content`.
@@ -154,7 +163,7 @@ To enable any autonomous AI agent harness (Antigravity CLI, Gemini-Kit, Claude C
   verification_gate: "Coordinates must fall strictly within 30.0300°N - 30.0600°N and 31.2300°E - 31.2500°E."
   ```
 
-### 9.3 Subagent: `multilingual-translator`
+### 10.3 Subagent: `multilingual-translator`
 - **Role**: Cultural Localization & i18n Translation Engineer.
 - **Task**: Translate native Egyptian Arabic venue descriptions into natural English, Dutch, French, etc., preserving local Cairo atmosphere notes and terminology.
 - **Tools Needed**: `view_file`, `write_to_file`.
@@ -181,16 +190,16 @@ To enable any autonomous AI agent harness (Antigravity CLI, Gemini-Kit, Claude C
 
 ---
 
-## 10. Future Feature Roadmap & Milestones
+## 11. Future Feature Roadmap & Milestones
 
-- **FUTURE-10.1 (Curated Bar Hops & Spatial Walking Trails)**:
+- **FUTURE-11.1 (Curated Bar Hops & Spatial Walking Trails)**:
   - Interactive walking routes connecting 3–4 adjacent historic venues with MapLibre spatial polyline overlays.
-- **FUTURE-10.2 (PWA & Offline Cartographic Cache)**:
+- **FUTURE-11.2 (PWA & Offline Cartographic Cache)**:
   - Service Worker vector tile and venue data caching for offline street navigation in Downtown Cairo.
 
 ---
 
-## 11. The Immutable Aesthetic Matrix (System Directive for UI Subagents)
+## 12. The Immutable Aesthetic Matrix (System Directive for UI Subagents)
 
 Future LLM subagents and developers modifying frontend UI files are bound to the following system directive:
 
