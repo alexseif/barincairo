@@ -4,6 +4,7 @@ from sqladmin import Admin
 
 from app.api.v1.endpoints.subscribers import router as subscribers_router
 from app.api.v1.endpoints.venues import router as venues_router
+from app.admin.auth import authentication_backend
 from app.admin.views import CategoryAdmin, SubscriberAdmin, VenueAdmin, VenuePhotoAdmin, VibeTagAdmin
 from app.core.config import settings
 from app.core.database import engine
@@ -29,7 +30,7 @@ app.include_router(venues_router, prefix=settings.API_V1_STR, tags=["Venues"])
 app.include_router(subscribers_router, prefix=settings.API_V1_STR, tags=["Subscribers"])
 
 # Initialize SQLAdmin Dashboard
-admin = Admin(app, engine, title="Bar in Cairo Admin")
+admin = Admin(app, engine, title="Bar in Cairo Admin", authentication_backend=authentication_backend)
 admin.add_view(VenueAdmin)
 admin.add_view(CategoryAdmin)
 admin.add_view(VibeTagAdmin)

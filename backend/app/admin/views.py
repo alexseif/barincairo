@@ -25,7 +25,7 @@ class VenueAdmin(ModelView, model=Venue):
         Venue.created_at,
     ]
     column_searchable_list = [Venue.name_en, Venue.slug, Venue.address_en]
-    column_filters = [Venue.price_range, Venue.is_active]
+    column_filters = ["price_range", "is_active"]
     icon = "fa-solid fa-martini-glass-citrus"
 
 
