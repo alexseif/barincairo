@@ -1,7 +1,15 @@
+import uuid
+
+from fastapi.security import OAuth2PasswordRequestForm
+from fastapi_users.db import SQLAlchemyUserDatabase
 from sqladmin.authentication import AuthenticationBackend
+from sqlalchemy import select
 from starlette.requests import Request
 
 from app.core.config import settings
+from app.core.database import AsyncSessionLocal
+from app.core.users import UserManager
+from app.models.user import User
 
 
 class AdminAuth(AuthenticationBackend):
@@ -10,14 +18,26 @@ class AdminAuth(AuthenticationBackend):
         username = form.get("username")
         password = form.get("password")
 
-        if not settings.ADMIN_PASSWORD or settings.ADMIN_PASSWORD == "change_me_in_env":
+        if not username or not password:
             return False
 
-        if username and password and username == settings.ADMIN_USERNAME and password == settings.ADMIN_PASSWORD:
-            request.session.update({"token": "authenticated"})
-            return True
-        return False
+        credentials = OAuth2PasswordRequestForm(
+            username=str(username),
+            password=str(password),
+            scope="",
+            grant_type="password",
+        )
 
+        async with AsyncSessionLocal() as session:
+            user_db = SQLAlchemyUserDatabase(session, User)
+            user_manager = UserManager(user_db)
+            user = await user_manager.authenticate(credentials)
+
+            if user and user.is_active and user.is_superuser:
+                request.session.update({"token": str(user.id)})
+                return True
+
+        return False
 
     async def logout(self, request: Request) -> bool:
         request.session.clear()
@@ -25,8 +45,27 @@ class AdminAuth(AuthenticationBackend):
 
     async def authenticate(self, request: Request) -> bool:
         token = request.session.get("token")
-        if token == "authenticated":
-            return True
+        if not token:
+            return False
+
+        try:
+            user_id = uuid.UUID(token)
+        except ValueError:
+            request.session.clear()
+            return False
+
+        async with AsyncSessionLocal() as session:
+            stmt = select(User).where(
+                User.id == user_id,
+                User.is_active.is_(True),
+                User.is_superuser.is_(True),
+            )
+            result = await session.execute(stmt)
+            user = result.scalar_one_or_none()
+            if user:
+                return True
+
+        request.session.clear()
         return False
 
 

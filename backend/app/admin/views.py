@@ -1,6 +1,14 @@
 from sqladmin import ModelView
 from app.models.subscribers import Subscriber
+from app.models.user import User
 from app.models.venues import Category, Venue, VenuePhoto, VibeTag
+
+
+class UserAdmin(ModelView, model=User):
+    column_list = [User.id, User.email, User.is_active, User.is_superuser, User.is_verified, User.created_at]
+    column_searchable_list = [User.email]
+    column_filters = ["is_active", "is_superuser", "is_verified"]
+    icon = "fa-solid fa-users"
 
 
 class CategoryAdmin(ModelView, model=Category):

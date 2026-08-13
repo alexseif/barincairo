@@ -1,7 +1,7 @@
 import asyncio
 from logging.config import fileConfig
 from alembic import context
-from sqlalchemy import pool
+from sqlalchemy import pool, text
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from app.core.config import settings
@@ -39,7 +39,7 @@ def do_run_migrations(connection) -> None:
     )
 
     with context.begin_transaction():
-        connection.execute("CREATE EXTENSION IF NOT EXISTS postgis;")
+        connection.execute(text("CREATE EXTENSION IF NOT EXISTS postgis;"))
         context.run_migrations()
 
 
