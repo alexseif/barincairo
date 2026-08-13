@@ -1,6 +1,7 @@
 import argparse
 import asyncio
 import sys
+import uuid
 
 from fastapi_users.db import SQLAlchemyUserDatabase
 from fastapi_users.exceptions import UserAlreadyExists
@@ -13,7 +14,7 @@ from app.schemas.user import UserCreate, UserUpdate
 
 async def create_admin_user(email: str, password: str) -> None:
     async with AsyncSessionLocal() as session:
-        user_db = SQLAlchemyUserDatabase(session, User)
+        user_db: SQLAlchemyUserDatabase[User, uuid.UUID] = SQLAlchemyUserDatabase(session, User)
         user_manager = UserManager(user_db)
 
         user_create = UserCreate(

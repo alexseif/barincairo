@@ -1,6 +1,9 @@
 import uuid
 from collections.abc import AsyncGenerator
 
+from app.core.config import settings
+from app.core.database import get_async_session
+from app.models.user import User
 from fastapi import Depends, Request
 from fastapi_users import BaseUserManager, FastAPIUsers, UUIDIDMixin
 from fastapi_users.authentication import (
@@ -11,14 +14,10 @@ from fastapi_users.authentication import (
 from fastapi_users.db import SQLAlchemyUserDatabase
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.config import settings
-from app.core.database import get_async_session
-from app.models.user import User
-
 
 async def get_user_db(
     session: AsyncSession = Depends(get_async_session),  # noqa: B008
-) -> AsyncGenerator[SQLAlchemyUserDatabase, None]:
+) -> AsyncGenerator[SQLAlchemyUserDatabase[User, uuid.UUID], None]:
     yield SQLAlchemyUserDatabase(session, User)
 
 
@@ -41,7 +40,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
 
 
 async def get_user_manager(
-    user_db: SQLAlchemyUserDatabase = Depends(get_user_db),  # noqa: B008
+    user_db: SQLAlchemyUserDatabase[User, uuid.UUID] = Depends(get_user_db),  # noqa: B008
 ) -> AsyncGenerator[UserManager, None]:
     yield UserManager(user_db)
 

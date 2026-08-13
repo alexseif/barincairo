@@ -1,9 +1,3 @@
-from typing import Optional
-from fastapi import APIRouter, Depends, HTTPException, Query, status
-from geoalchemy2.functions import ST_X, ST_Y
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
 
 from app.core.database import get_async_session
 from app.models.venues import Category, Venue, VibeTag
@@ -12,9 +6,14 @@ from app.schemas.venues import (
     GeoJSONFeature,
     GeoJSONFeatureCollection,
     GeoJSONGeometry,
-    VibeTagResponse,
     VenueProperties,
+    VibeTagResponse,
 )
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from geoalchemy2.functions import ST_X, ST_Y
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 router = APIRouter()
 
@@ -39,10 +38,10 @@ async def list_vibes(
 
 @router.get("/venues", response_model=GeoJSONFeatureCollection)
 async def list_venues_geojson(
-    bbox: Optional[str] = Query(None, description="min_lng,min_lat,max_lng,max_lat"),
-    category: Optional[str] = Query(None, description="Category slug filter"),
-    price_range: Optional[str] = Query(None, description="Price range filter e.g. $, $$, $$$"),
-    vibe: Optional[str] = Query(None, description="Vibe tag slug filter"),
+    bbox: str | None = Query(None, description="min_lng,min_lat,max_lng,max_lat"),
+    category: str | None = Query(None, description="Category slug filter"),
+    price_range: str | None = Query(None, description="Price range filter e.g. $, $$, $$$"),
+    vibe: str | None = Query(None, description="Vibe tag slug filter"),
     session: AsyncSession = Depends(get_async_session),
 ) -> GeoJSONFeatureCollection:
     stmt = (

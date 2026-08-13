@@ -1,4 +1,4 @@
-from typing import List, Optional
+
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -27,7 +27,7 @@ class VibeTagResponse(VibeTagBase):
 
 class GeoJSONGeometry(BaseModel):
     type: str = "Point"
-    coordinates: List[float] = Field(..., description="[longitude, latitude]")
+    coordinates: list[float] = Field(..., description="[longitude, latitude]")
 
 
 class VenueProperties(BaseModel):
@@ -35,16 +35,16 @@ class VenueProperties(BaseModel):
     slug: str
     name_en: str
     name_ar: str
-    description_en: Optional[str] = None
-    description_ar: Optional[str] = None
+    description_en: str | None = None
+    description_ar: str | None = None
     address_en: str
     address_ar: str
     price_range: str = "$$"
-    vibe_description: Optional[str] = None
-    photo_url: Optional[str] = None
+    vibe_description: str | None = None
+    photo_url: str | None = None
     category_slug: str
     category_name: str
-    vibes: List[str] = []
+    vibes: list[str] = []
 
 
 class GeoJSONFeature(BaseModel):
@@ -55,4 +55,4 @@ class GeoJSONFeature(BaseModel):
 
 class GeoJSONFeatureCollection(BaseModel):
     type: str = "FeatureCollection"
-    features: List[GeoJSONFeature]
+    features: list[GeoJSONFeature]

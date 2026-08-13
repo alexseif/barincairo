@@ -1,15 +1,14 @@
 import uuid
 
+from app.core.config import settings
+from app.core.database import AsyncSessionLocal
+from app.core.users import UserManager
+from app.models.user import User
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi_users.db import SQLAlchemyUserDatabase
 from sqladmin.authentication import AuthenticationBackend
 from sqlalchemy import select
 from starlette.requests import Request
-
-from app.core.config import settings
-from app.core.database import AsyncSessionLocal
-from app.core.users import UserManager
-from app.models.user import User
 
 
 class AdminAuth(AuthenticationBackend):
@@ -29,7 +28,7 @@ class AdminAuth(AuthenticationBackend):
         )
 
         async with AsyncSessionLocal() as session:
-            user_db = SQLAlchemyUserDatabase(session, User)
+            user_db: SQLAlchemyUserDatabase[User, uuid.UUID] = SQLAlchemyUserDatabase(session, User)
             user_manager = UserManager(user_db)
             user = await user_manager.authenticate(credentials)
 
@@ -56,9 +55,9 @@ class AdminAuth(AuthenticationBackend):
 
         async with AsyncSessionLocal() as session:
             stmt = select(User).where(
-                User.id == user_id,
-                User.is_active.is_(True),
-                User.is_superuser.is_(True),
+                User.id == user_id,  # type: ignore[arg-type]
+                User.is_active,  # type: ignore[arg-type]
+                User.is_superuser,  # type: ignore[arg-type]
             )
             result = await session.execute(stmt)
             user = result.scalar_one_or_none()

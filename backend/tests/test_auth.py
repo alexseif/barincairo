@@ -1,10 +1,15 @@
 import pytest
+from app.admin.auth import authentication_backend
+from app.cli import create_admin_user
+from app.core.config import settings
+from app.main import app
 from httpx import ASGITransport, AsyncClient
 from starlette.requests import Request
 
-from app.admin.auth import authentication_backend
-from app.core.config import settings
-from app.main import app
+
+async def ensure_superuser():
+    """Ensure the default superuser exists prior to auth test execution."""
+    await create_admin_user("admin@barincairo.com", "supersecretadmin")
 
 
 def test_legacy_env_credentials_removed():
@@ -28,6 +33,7 @@ async def test_auth_login_invalid_credentials():
 @pytest.mark.asyncio
 async def test_auth_login_success():
     """Verify that login succeeds for seeded superuser and sets auth cookie."""
+    await ensure_superuser()
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://testserver") as client:
         response = await client.post(
@@ -41,6 +47,7 @@ async def test_auth_login_success():
 @pytest.mark.asyncio
 async def test_admin_auth_class():
     """Test SQLAdmin AdminAuth login and authenticate flow."""
+    await ensure_superuser()
     session_store = {}
 
     # Mock Request for Login Failure

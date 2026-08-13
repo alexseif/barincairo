@@ -1,7 +1,7 @@
 import asyncio
+
 from geoalchemy2.elements import WKTElement
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import AsyncSessionLocal, engine
 from app.models.venues import Base, Category, Venue, VibeTag

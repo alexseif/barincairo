@@ -1,7 +1,16 @@
 from datetime import datetime, timezone
-from typing import List, Optional
+
 from geoalchemy2 import Geometry
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Boolean, Text, Table
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Integer,
+    String,
+    Table,
+    Text,
+)
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -26,7 +35,7 @@ class Category(Base):
     name_en: Mapped[str] = mapped_column(String(100), nullable=False)
     name_ar: Mapped[str] = mapped_column(String(100), nullable=False)
 
-    venues: Mapped[List["Venue"]] = relationship("Venue", back_populates="category")
+    venues: Mapped[list["Venue"]] = relationship("Venue", back_populates="category")
 
     def __repr__(self) -> str:
         return f"<Category {self.slug}>"
@@ -40,7 +49,7 @@ class VibeTag(Base):
     name_en: Mapped[str] = mapped_column(String(100), nullable=False)
     name_ar: Mapped[str] = mapped_column(String(100), nullable=False)
 
-    venues: Mapped[List["Venue"]] = relationship("Venue", secondary=venue_vibes, back_populates="vibes")
+    venues: Mapped[list["Venue"]] = relationship("Venue", secondary=venue_vibes, back_populates="vibes")
 
     def __repr__(self) -> str:
         return f"<VibeTag {self.slug}>"
@@ -54,8 +63,8 @@ class Venue(Base):
     slug: Mapped[str] = mapped_column(String(100), unique=True, index=True, nullable=False)
     name_en: Mapped[str] = mapped_column(String(150), nullable=False)
     name_ar: Mapped[str] = mapped_column(String(150), nullable=False)
-    description_en: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    description_ar: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    description_en: Mapped[str | None] = mapped_column(Text, nullable=True)
+    description_ar: Mapped[str | None] = mapped_column(Text, nullable=True)
     address_en: Mapped[str] = mapped_column(String(255), nullable=False)
     address_ar: Mapped[str] = mapped_column(String(255), nullable=False)
     location: Mapped[object] = mapped_column(
@@ -63,16 +72,16 @@ class Venue(Base):
         nullable=False,
     )
     price_range: Mapped[str] = mapped_column(String(10), default="$$", nullable=False)
-    vibe_description: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
-    photo_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    vibe_description: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    photo_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False
     )
 
     category: Mapped["Category"] = relationship("Category", back_populates="venues")
-    vibes: Mapped[List["VibeTag"]] = relationship("VibeTag", secondary=venue_vibes, back_populates="venues")
-    photos: Mapped[List["VenuePhoto"]] = relationship("VenuePhoto", back_populates="venue", cascade="all, delete-orphan")
+    vibes: Mapped[list["VibeTag"]] = relationship("VibeTag", secondary=venue_vibes, back_populates="venues")
+    photos: Mapped[list["VenuePhoto"]] = relationship("VenuePhoto", back_populates="venue", cascade="all, delete-orphan")
 
     def __repr__(self) -> str:
         return f"<Venue {self.slug}>"
@@ -84,6 +93,6 @@ class VenuePhoto(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     venue_id: Mapped[int] = mapped_column(Integer, ForeignKey("venues.id", ondelete="CASCADE"), nullable=False)
     photo_url: Mapped[str] = mapped_column(String(500), nullable=False)
-    caption: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
+    caption: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
     venue: Mapped["Venue"] = relationship("Venue", back_populates="photos")
