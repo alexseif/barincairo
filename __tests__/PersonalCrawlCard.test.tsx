@@ -9,7 +9,7 @@ describe('PersonalCrawlCard Component', () => {
     contactEmail: 'hello@barincairo.com',
   }
 
-  it('renders headline, 2-column layout text, and ground rules', () => {
+  it('renders WhatsApp Dispatch 2-column section and Ground Rules section', () => {
     render(<PersonalCrawlCard {...defaultProps} />)
 
     expect(
@@ -19,11 +19,16 @@ describe('PersonalCrawlCard Component', () => {
     ).toBeInTheDocument()
 
     expect(
+      screen.getByRole('heading', {
+        name: /Ground rules/i,
+      })
+    ).toBeInTheDocument()
+
+    expect(
       screen.getByText(/building automated curated bar hop experiences/i)
     ).toBeInTheDocument()
 
-    expect(screen.getByText(/Intimate Groups:/i)).toBeInTheDocument()
-    expect(screen.getByText(/Max 6–8 people/i)).toBeInTheDocument()
+    expect(screen.getByText(/Intimate Groups \(Max 6–8 people\):/i)).toBeInTheDocument()
     expect(screen.getByText(/Experience Over Drinking:/i)).toBeInTheDocument()
     expect(screen.getByText(/Local Respect:/i)).toBeInTheDocument()
   })

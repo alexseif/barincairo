@@ -1,15 +1,4 @@
-# --- Build Stage ---
-FROM node:20-alpine AS builder
-WORKDIR /app
-
-COPY package*.json ./
-RUN npm ci || npm install
-
-COPY . .
-ENV NEXT_TELEMETRY_DISABLED=1
-RUN npm run build
-
-# --- Production Runner Stage ---
+# --- Base Node Image ---
 FROM node:20-alpine AS runner
 WORKDIR /app
 
@@ -20,9 +9,9 @@ ENV HOSTNAME="0.0.0.0"
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY public ./public
+COPY --chown=nextjs:nodejs .next/standalone ./
+COPY --chown=nextjs:nodejs .next/static ./.next/static
 
 USER nextjs
 EXPOSE 3000
