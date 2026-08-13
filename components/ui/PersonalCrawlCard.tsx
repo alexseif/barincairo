@@ -82,18 +82,18 @@ export default function PersonalCrawlCard({
               </span>
               <div>
                 <strong className="font-semibold text-primary">Intimate Groups (Max 6–8 people):</strong>
-                <p className="mt-1 text-primary/80">
+                <p className="mt-1 text-primary/80 text-lg">
                   Downtown Cairo’s historic bars and backroom bistros have limited seating. Keeping groups small ensures everyone gets a cozy table.
                 </p>
               </div>
             </li>
             <li className="flex items-start gap-4">
-              <span className="flex size-8 shrink-0 items-center justify-center border border-accent/40 bg-accent/10 font-mono text-xs font-bold text-accent">
+              <span className="flex size-8 shrink-0 items-center justify-center border border-accent/40 bg-accent/10 font-mono text-base font-bold text-accent">
                 02
               </span>
               <div>
                 <strong className="font-semibold text-primary">Experience Over Drinking:</strong>
-                <p className="mt-1 text-primary/80">
+                <p className="mt-1 text-primary/80 text-lg">
                   You don’t have to finish every beer and you don’t have to drink alcohol—this walk is about heritage, architecture, atmosphere, and good company.
                 </p>
               </div>
@@ -104,7 +104,7 @@ export default function PersonalCrawlCard({
               </span>
               <div>
                 <strong className="font-semibold text-primary">Local Respect:</strong>
-                <p className="mt-1 text-primary/80">
+                <p className="mt-1 text-primary/80 text-lg">
                   We honor local venue staff, historic atmosphere, and neighborhood character as welcoming guests in Downtown Cairo.
                 </p>
               </div>
