@@ -3,7 +3,9 @@
 import { useEffect, useState } from 'react'
 import { ArrowUpRight, ChevronDown, Clock3, Compass, MapPin, Menu, Search, Sparkles, X, Tag, DollarSign } from 'lucide-react'
 import MapLibreMap from '@/components/map/MapLibreMap'
-import { fetchVenuesGeoJSON, subscribeWhatsApp, FALLBACK_VENUES, type GeoJSONFeature, type GeoJSONFeatureCollection } from '@/lib/api'
+import { fetchVenuesGeoJSON, FALLBACK_VENUES, type GeoJSONFeature, type GeoJSONFeatureCollection } from '@/lib/api'
+import PersonalCrawlCard from '@/components/ui/PersonalCrawlCard'
+import { CONTACT_CONFIG } from '@/lib/config'
 
 const VIBE_FILTERS = [
   { slug: 'all', name: 'All Vibes' },
@@ -30,8 +32,6 @@ export default function Home() {
   const [activePriceFilter, setActivePriceFilter] = useState('all')
   
   const [mobileNav, setMobileNav] = useState(false)
-  const [whatsapp, setWhatsapp] = useState('')
-  const [subscribed, setSubscribed] = useState(false)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -52,14 +52,6 @@ export default function Home() {
 
     loadVenues()
   }, [activeVibeFilter, activePriceFilter])
-
-  async function handleSubscribe(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    if (whatsapp.trim()) {
-      const ok = await subscribeWhatsApp(whatsapp.trim())
-      if (ok) setSubscribed(true)
-    }
-  }
 
   const selectedProps = selectedFeature?.properties
 
@@ -280,43 +272,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* WhatsApp Dispatch Registration */}
-      <section id="subscribe" className="mx-auto grid max-w-[1440px] gap-10 px-5 py-16 lg:grid-cols-[0.7fr_1.3fr] lg:px-10 lg:py-24">
-        <div>
-          <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.2em] text-accent">WhatsApp Dispatch</p>
-          <h2 className="font-serif text-5xl leading-[0.9] tracking-[-0.06em] text-primary lg:text-6xl">
-            Know where<br />
-            <em className="font-normal">to go next.</em>
-          </h2>
-        </div>
-
-        <div className="flex max-w-xl flex-col justify-end gap-6 lg:justify-self-end">
-          <p className="font-serif text-xl leading-relaxed text-primary/80">
-            New openings, old favourites, and the occasional invitation directly to your WhatsApp. One thoughtful note, never noise.
-          </p>
-
-          {subscribed ? (
-            <p className="border-b border-primary py-4 font-mono text-[10px] uppercase tracking-[0.16em] text-accent">
-              You’re on the WhatsApp dispatch. Ahla wa sahla.
-            </p>
-          ) : (
-            <form onSubmit={handleSubscribe} className="flex border-b border-primary py-2">
-              <label htmlFor="whatsapp" className="sr-only">Your WhatsApp number</label>
-              <input
-                id="whatsapp"
-                type="tel"
-                required
-                value={whatsapp}
-                onChange={(event) => setWhatsapp(event.target.value)}
-                placeholder="WhatsApp number (e.g. +20 100 000 0000)"
-                className="min-w-0 flex-1 bg-transparent font-serif text-lg text-primary outline-none placeholder:text-muted-foreground min-h-[44px]"
-              />
-              <button type="submit" className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-accent hover:text-primary px-4 min-h-[44px]">
-                Subscribe <ArrowUpRight className="size-3" />
-              </button>
-            </form>
-          )}
-        </div>
+      {/* WhatsApp Dispatch & Personal Bar Crawl Section */}
+      <section className="mx-auto max-w-[1440px] px-5 py-16 lg:px-10 lg:py-24">
+        <PersonalCrawlCard
+          whatsappNumber={CONTACT_CONFIG.WHATSAPP_NUMBER}
+          contactEmail={CONTACT_CONFIG.CONTACT_EMAIL}
+        />
       </section>
 
       {/* Footer */}
