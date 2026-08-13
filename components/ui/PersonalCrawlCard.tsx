@@ -36,7 +36,7 @@ export default function PersonalCrawlCard({
 
         <div className="flex max-w-xl flex-col justify-between gap-8 lg:justify-self-end">
           <p className="font-serif text-xl leading-relaxed text-primary/80">
-            We’re currently building automated curated bar hop experiences. For now, reach out directly to us on WhatsApp or Email to plan a personal, tailored crawl for your evening!
+            We’re currently building curated bar hop experiences. For now, reach out directly to us on WhatsApp or Email to plan a personal, tailored crawl for your evening!
           </p>
 
           <div className="flex flex-wrap items-center gap-4">
@@ -64,10 +64,6 @@ export default function PersonalCrawlCard({
             </a>
           </div>
         </div>
-      </section>
-
-      {/* Section 2: Ground Rules for the Night */}
-      <section className="grid gap-10 border-t border-primary/25 pt-12 lg:grid-cols-[0.7fr_1.3fr]">
         <div>
           <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
             Bar Crawl Guidelines

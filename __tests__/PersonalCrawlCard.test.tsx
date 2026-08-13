@@ -25,7 +25,7 @@ describe('PersonalCrawlCard Component', () => {
     ).toBeInTheDocument()
 
     expect(
-      screen.getByText(/building automated curated bar hop experiences/i)
+      screen.getByText(/building curated bar hop experiences/i)
     ).toBeInTheDocument()
 
     expect(screen.getByText(/Intimate Groups \(Max 6–8 people\):/i)).toBeInTheDocument()
