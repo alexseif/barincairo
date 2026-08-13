@@ -1,6 +1,6 @@
 # Task List: Admin User Authentication (`fastapi-users`)
 
-- [ ] **Task 1: Dependencies & Absolute `.env` Config Cleanup (`SEC-1.4`)**
+- [x] **Task 1: Dependencies & Absolute `.env` Config Cleanup (`SEC-1.4`)**
   - Add `fastapi-users[sqlalchemy]` and `argon2-cffi` to `backend/requirements.txt`
   - Update `backend/app/core/config.py` with `BASE_DIR` & `ENV_FILE_PATH` absolute resolution
   - Remove legacy `ADMIN_USERNAME` and `ADMIN_PASSWORD` from `config.py` (removing `.env` auth)
