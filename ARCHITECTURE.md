@@ -29,43 +29,30 @@ CREATE EXTENSION IF NOT EXISTS postgis;
 
 -- Venue Taxonomies & Establishments
 CREATE TABLE venues (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id SERIAL PRIMARY KEY,
     slug VARCHAR(100) UNIQUE NOT NULL,
-    name_en VARCHAR(150) NOT NULL,
-    name_ar VARCHAR(150) NOT NULL,
-    venue_type VARCHAR(50) NOT NULL, -- e.g., 'Live music', 'Cocktail bar', 'Rooftop', 'Cafe bar'
-    address_en TEXT NOT NULL,
-    address_ar TEXT NOT NULL,
-    vibe_tags TEXT[] DEFAULT '{}',
-    description_en TEXT NOT NULL,
-    description_ar TEXT,
-    cover_image_url TEXT,
+    name VARCHAR(150) NOT NULL,
+    category_id INT NOT NULL REFERENCES categories(id),
+    address TEXT NOT NULL,
+    description TEXT,
+    vibe_description VARCHAR(255),
+    price_range VARCHAR(10) DEFAULT '$$' NOT NULL,
+    working_hours VARCHAR(100),
+    photo_url VARCHAR(500),
+    google_maps_url TEXT,
     location GEOMETRY(Point, 4326) NOT NULL,
-    is_active BOOLEAN DEFAULT true,
-    is_premium BOOLEAN DEFAULT false,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    is_active BOOLEAN DEFAULT true NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 CREATE INDEX idx_venues_location ON venues USING GIST (location);
 
--- Community Bar Hops / Curated Trails
-CREATE TABLE bar_hops (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    title VARCHAR(150) NOT NULL,
-    slug VARCHAR(100) UNIQUE NOT NULL,
-    description TEXT NOT NULL,
-    estimated_duration_minutes INT NOT NULL,
-    stops_count INT NOT NULL,
-    route_linestring GEOMETRY(LineString, 4326),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-
 -- Subscriptions / Registration Funnel
 CREATE TABLE subscribers (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id SERIAL PRIMARY KEY,
     whatsapp_number VARCHAR(50) UNIQUE NOT NULL,
-    source VARCHAR(50) DEFAULT 'whatsapp_dispatch',
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    source VARCHAR(50) DEFAULT 'website',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 -- Hybrid Ingestion Staging Queue
@@ -76,11 +63,12 @@ CREATE TABLE venue_staging (
     name_raw VARCHAR(255) NOT NULL,
     address_raw TEXT NOT NULL,
     location GEOMETRY(Point, 4326) NOT NULL,
+    working_hours VARCHAR(100),
     raw_payload JSONB NOT NULL,
     enriched_payload JSONB,
     status VARCHAR(50) DEFAULT 'PENDING_CURATION',
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 CREATE INDEX idx_staging_location ON venue_staging USING GIST (location);
@@ -111,15 +99,17 @@ CREATE INDEX idx_staging_status ON venue_staging(status);
 ## 3. Backend Runtime & Admin Panel Specification (FastAPI + SQLAdmin)
 
 - **Framework**: Python FastAPI + AsyncPG + GeoAlchemy2.
-- **Admin Panel**: **SQLAdmin** / **Starlette-Admin** mounted directly at `/admin`.
-  - *Engineering Rationale*: Eliminates bespoke React admin development cycles. Automatically generates responsive CRUD views for `Venue`, `BarHop`, and `Subscriber` models.
-  - *Spatial Input Mitigation*: Custom latitude/longitude float helpers are exposed in the view model to automatically generate PostGIS `Point(lng lat)` geometries without requiring manual WKT string entry.
+- **Admin Panel**: **SQLAdmin** mounted directly at `/admin`.
+  - *Engineering Rationale*: Eliminates bespoke React admin development cycles while generating responsive CRUD views for all entities: `User`, `Category`, `VibeTag`, `Venue`, `VenueStaging`, `VenuePhoto`, and `Subscriber`.
+  - *Spatial Input & 500 Error Resolution*: To resolve WTForms/SQLAdmin internal server errors on `Venue` and `VenueStaging` edit views, PostGIS `location` (`Geometry`) is excluded from automatic form generation. Dedicated `latitude` and `longitude` float inputs are exposed in view models, automatically generating PostGIS `POINT(lng lat)` geometries upon creation/editing.
+  - *Subscriber & Staging Edit 500 Error Resolution*: Explicit `form_columns` (and `form_excluded_columns` excluding auto-populated primary keys and timezone-aware timestamps) are defined across `SubscriberAdmin`, `VenueAdmin`, and `VenueStagingAdmin`.
+  - *Full Entity CRUD*: All 7 entities support complete List, View, Create, Edit, and Delete operations.
+  - *Admin TDD*: Pytest suite (`backend/tests/test_admin.py`) validates authenticated admin session authorization and full CRUD functionality (List, View, Create, Edit, Delete) across all 7 views.
 - **Endpoints**:
   - `GET /api/v1/venues?bbox={xmin},{ymin},{xmax},{ymax}`: Stream GeoJSON vector data.
   - `GET /api/v1/venues/{slug}`: Detailed establishment metadata.
-  - `GET /api/v1/hops`: Retrieve curated bar hop routes.
-  - `POST /api/v1/subscribe`: Asynchronous WhatsApp registration.
-  - `GET/POST /admin`: SQLAdmin dashboard.
+  - `POST /api/v1/subscribe`: WhatsApp registration.
+  - `GET/POST /admin`: SQLAdmin dashboard & entity management endpoints.
 
 ---
 
