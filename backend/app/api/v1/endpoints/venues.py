@@ -1,4 +1,10 @@
 
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from geoalchemy2.functions import ST_X, ST_Y
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
+
 from app.core.database import get_async_session
 from app.models.venues import Category, Venue, VibeTag
 from app.schemas.venues import (
@@ -9,11 +15,6 @@ from app.schemas.venues import (
     VenueProperties,
     VibeTagResponse,
 )
-from fastapi import APIRouter, Depends, HTTPException, Query, status
-from geoalchemy2.functions import ST_X, ST_Y
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
 
 router = APIRouter()
 

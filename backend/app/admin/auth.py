@@ -1,14 +1,15 @@
 import uuid
 
-from app.core.config import settings
-from app.core.database import AsyncSessionLocal
-from app.core.users import UserManager
-from app.models.user import User
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi_users.db import SQLAlchemyUserDatabase
 from sqladmin.authentication import AuthenticationBackend
 from sqlalchemy import select
 from starlette.requests import Request
+
+from app.core.config import settings
+from app.core.database import AsyncSessionLocal
+from app.core.users import UserManager
+from app.models.user import User
 
 
 class AdminAuth(AuthenticationBackend):
