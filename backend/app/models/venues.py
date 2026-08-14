@@ -1,6 +1,8 @@
 from datetime import datetime, timezone
 
 from geoalchemy2 import Geometry
+from geoalchemy2.elements import WKTElement
+from geoalchemy2.shape import to_shape
 from sqlalchemy import (
     Boolean,
     Column,
@@ -32,8 +34,7 @@ class Category(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     slug: Mapped[str] = mapped_column(String(50), unique=True, index=True, nullable=False)
-    name_en: Mapped[str] = mapped_column(String(100), nullable=False)
-    name_ar: Mapped[str] = mapped_column(String(100), nullable=False)
+    name: Mapped[str] = mapped_column(String(100), nullable=False)
 
     venues: Mapped[list["Venue"]] = relationship("Venue", back_populates="category")
 
@@ -46,8 +47,7 @@ class VibeTag(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     slug: Mapped[str] = mapped_column(String(50), unique=True, index=True, nullable=False)
-    name_en: Mapped[str] = mapped_column(String(100), nullable=False)
-    name_ar: Mapped[str] = mapped_column(String(100), nullable=False)
+    name: Mapped[str] = mapped_column(String(100), nullable=False)
 
     venues: Mapped[list["Venue"]] = relationship("Venue", secondary=venue_vibes, back_populates="vibes")
 
@@ -61,18 +61,16 @@ class Venue(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     category_id: Mapped[int] = mapped_column(Integer, ForeignKey("categories.id"), nullable=False)
     slug: Mapped[str] = mapped_column(String(100), unique=True, index=True, nullable=False)
-    name_en: Mapped[str] = mapped_column(String(150), nullable=False)
-    name_ar: Mapped[str] = mapped_column(String(150), nullable=False)
-    description_en: Mapped[str | None] = mapped_column(Text, nullable=True)
-    description_ar: Mapped[str | None] = mapped_column(Text, nullable=True)
-    address_en: Mapped[str] = mapped_column(String(255), nullable=False)
-    address_ar: Mapped[str] = mapped_column(String(255), nullable=False)
+    name: Mapped[str] = mapped_column(String(150), nullable=False)
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    address: Mapped[str] = mapped_column(String(255), nullable=False)
     google_maps_url: Mapped[str | None] = mapped_column(Text, nullable=True)
     location: Mapped[object] = mapped_column(
         Geometry(geometry_type="POINT", srid=4326, spatial_index=True),
         nullable=False,
     )
     price_range: Mapped[str] = mapped_column(String(10), default="$$", nullable=False)
+    working_hours: Mapped[str | None] = mapped_column(String(100), nullable=True)
     vibe_description: Mapped[str | None] = mapped_column(String(255), nullable=True)
     photo_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
@@ -83,6 +81,40 @@ class Venue(Base):
     category: Mapped["Category"] = relationship("Category", back_populates="venues")
     vibes: Mapped[list["VibeTag"]] = relationship("VibeTag", secondary=venue_vibes, back_populates="venues")
     photos: Mapped[list["VenuePhoto"]] = relationship("VenuePhoto", back_populates="venue", cascade="all, delete-orphan")
+
+    @property
+    def latitude(self) -> float | None:
+        if self.location is None:
+            return None
+        try:
+            shape = to_shape(self.location)
+            return float(shape.y)
+        except Exception:
+            return None
+
+    @latitude.setter
+    def latitude(self, val: float | None) -> None:
+        if val is None:
+            return
+        lng = self.longitude if self.longitude is not None else 0.0
+        self.location = WKTElement(f"POINT({lng} {val})", srid=4326)
+
+    @property
+    def longitude(self) -> float | None:
+        if self.location is None:
+            return None
+        try:
+            shape = to_shape(self.location)
+            return float(shape.x)
+        except Exception:
+            return None
+
+    @longitude.setter
+    def longitude(self, val: float | None) -> None:
+        if val is None:
+            return
+        lat = self.latitude if self.latitude is not None else 0.0
+        self.location = WKTElement(f"POINT({val} {lat})", srid=4326)
 
     def __repr__(self) -> str:
         return f"<Venue {self.slug}>"
@@ -97,3 +129,4 @@ class VenuePhoto(Base):
     caption: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
     venue: Mapped["Venue"] = relationship("Venue", back_populates="photos")
+
