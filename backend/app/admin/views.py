@@ -1,6 +1,7 @@
 from typing import ClassVar
 
 from sqladmin import ModelView
+from sqladmin.filters import AllUniqueStringValuesFilter, BooleanFilter
 
 from app.models.subscribers import Subscriber
 from app.models.user import User
@@ -11,7 +12,11 @@ from app.models.venues import Category, Venue, VenuePhoto, VibeTag
 class UserAdmin(ModelView, model=User):
     column_list: ClassVar = ["id", "email", "is_active", "is_superuser", "is_verified", "created_at"]
     column_searchable_list: ClassVar = ["email"]
-    column_filters: ClassVar = ["is_active", "is_superuser", "is_verified"]  # type: ignore[list-item]
+    column_filters: ClassVar = [
+        BooleanFilter(User.is_active),
+        BooleanFilter(User.is_superuser),
+        BooleanFilter(User.is_verified),
+    ]
     icon = "fa-solid fa-users"
 
 
@@ -37,7 +42,10 @@ class VenueAdmin(ModelView, model=Venue):
         Venue.created_at,
     ]
     column_searchable_list: ClassVar = [Venue.name_en, Venue.slug, Venue.address_en]
-    column_filters: ClassVar = [Venue.price_range, Venue.is_active]
+    column_filters: ClassVar = [
+        AllUniqueStringValuesFilter(Venue.price_range),
+        BooleanFilter(Venue.is_active),
+    ]
     icon = "fa-solid fa-martini-glass-citrus"
 
 
@@ -51,7 +59,7 @@ class VenueStagingAdmin(ModelView, model=VenueStaging):
         VenueStaging.created_at,
     ]
     column_searchable_list: ClassVar = [VenueStaging.name_raw, VenueStaging.place_id, VenueStaging.google_maps_url]
-    column_filters: ClassVar = [VenueStaging.status]
+    column_filters: ClassVar = [AllUniqueStringValuesFilter(VenueStaging.status)]
     icon = "fa-solid fa-layer-group"
 
 

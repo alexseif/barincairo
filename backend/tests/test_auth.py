@@ -75,3 +75,24 @@ async def test_admin_auth_class():
     # Test logout
     assert await authentication_backend.logout(req_auth) is True
     assert "token" not in session_store
+
+
+@pytest.mark.asyncio
+async def test_admin_list_views():
+    """Verify SQLAdmin list routes execute without internal server errors."""
+    await ensure_superuser()
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://testserver") as client:
+        # Authenticate with SQLAdmin dashboard
+        login_res = await client.post(
+            "/admin/login",
+            data={"username": "admin@barincairo.com", "password": "supersecretadmin"},
+            follow_redirects=True,
+        )
+        assert login_res.status_code == 200
+
+        # Verify SQLAdmin model list views return 200 OK
+        for route in ["/admin/venue/list", "/admin/user/list", "/admin/venue-staging/list"]:
+            resp = await client.get(route)
+            assert resp.status_code == 200, f"Route {route} failed with status {resp.status_code}: {resp.text}"
+
