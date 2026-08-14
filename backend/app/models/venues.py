@@ -67,6 +67,7 @@ class Venue(Base):
     description_ar: Mapped[str | None] = mapped_column(Text, nullable=True)
     address_en: Mapped[str] = mapped_column(String(255), nullable=False)
     address_ar: Mapped[str] = mapped_column(String(255), nullable=False)
+    google_maps_url: Mapped[str | None] = mapped_column(Text, nullable=True)
     location: Mapped[object] = mapped_column(
         Geometry(geometry_type="POINT", srid=4326, spatial_index=True),
         nullable=False,

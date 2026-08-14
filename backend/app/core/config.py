@@ -5,7 +5,7 @@ from pydantic import ValidationInfo, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-ENV_FILE_PATH = BASE_DIR / ".env"
+ENV_FILE_PATH = BASE_DIR / ".env" if (BASE_DIR / ".env").exists() else BASE_DIR.parent / ".env"
 
 
 class Settings(BaseSettings):
