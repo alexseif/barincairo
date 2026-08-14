@@ -6,12 +6,10 @@ from pydantic import BaseModel, Field, field_validator
 class VenueIngestSchema(BaseModel):
     slug: str
     category_slug: str
-    name_en: str
-    name_ar: str
-    description_en: str | None = None
-    description_ar: str | None = None
-    address_en: str
-    address_ar: str
+    name: str
+    description: str | None = None
+    address: str
+    working_hours: str | None = None
     google_maps_url: str
     latitude: float = Field(
         ...,

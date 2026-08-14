@@ -28,12 +28,10 @@ CULTURAL_ENRICHMENT_KNOWLEDGE_BASE: dict[str, dict[str, Any]] = {
     "ChIJ_cap_dor_cairo_001": {
         "slug": "cap-d-or",
         "category_slug": "bars",
-        "name_en": "Cap d'Or (Bôite de Nuit)",
-        "name_ar": "كاب دي أور",
-        "description_en": "Historic Downtown Cairo watering hole established in the mid-20th century.",
-        "description_ar": "بار تاريخي تأسس في منتصف القرن العشرين بوسط البلد.",
-        "address_en": "27 Abdel Khalek Sarwat St, Downtown, Cairo",
-        "address_ar": "٢٧ شارع عبد الخالق ثروت، وسط البلد، القاهرة",
+        "name": "Cap d'Or (Bôite de Nuit)",
+        "description": "Historic Downtown Cairo watering hole established in the mid-20th century.",
+        "address": "27 Abdel Khalek Sarwat St, Downtown, Cairo",
+        "working_hours": "5:00 PM - 3:00 AM",
         "price_range": "$$",
         "vibe_description": "Nostalgic, retro art-deco pub",
         "vibes": ["historic", "cozy", "art-deco"],
@@ -45,12 +43,10 @@ CULTURAL_ENRICHMENT_KNOWLEDGE_BASE: dict[str, dict[str, Any]] = {
     "ChIJ_horreya_cairo_002": {
         "slug": "horreya-hotel-bar",
         "category_slug": "bars",
-        "name_en": "Horreya Hotel & Bar",
-        "name_ar": "مقهى وبار الحرية",
-        "description_en": "Iconic Bab El Louk salon with lofty ceilings, expansive mirrors, and legendary social history.",
-        "description_ar": "صالون تاريخي بباب اللوق ذو أسقف مرتفعة ومرايا كلاسيكية.",
-        "address_en": "Bab El Louk Square, Downtown, Cairo",
-        "address_ar": "ميدان باب اللوق، وسط البلد، القاهرة",
+        "name": "Horreya Hotel & Bar",
+        "description": "Iconic Bab El Louk salon with lofty ceilings, expansive mirrors, and legendary social history.",
+        "address": "Bab El Louk Square, Downtown, Cairo",
+        "working_hours": "12:00 PM - 2:00 AM",
         "price_range": "$",
         "vibe_description": "Bohemian, spacious, energetic",
         "vibes": ["bohemian", "historic", "spacious"],
@@ -62,12 +58,10 @@ CULTURAL_ENRICHMENT_KNOWLEDGE_BASE: dict[str, dict[str, Any]] = {
     "ChIJ_stella_bar_cairo_003": {
         "slug": "stella-bar-downtown",
         "category_slug": "bars",
-        "name_en": "Stella Bar Downtown",
-        "name_ar": "ستيلا بار وسط البلد",
-        "description_en": "Unpretentious downtown pub favored by local artists and traditionalists.",
-        "description_ar": "بار تقليدي دافئ يفضله الفنانون والمحليون في وسط القاهرة.",
-        "address_en": "Kamal El-Din Salah St, Downtown, Cairo",
-        "address_ar": "شارع كمال الدين صلاح، وسط البلد، القاهرة",
+        "name": "Stella Bar Downtown",
+        "description": "Unpretentious downtown pub favored by local artists and traditionalists.",
+        "address": "Kamal El-Din Salah St, Downtown, Cairo",
+        "working_hours": "6:00 PM - 1:00 AM",
         "price_range": "$$",
         "vibe_description": "Authentic, cozy, traditional",
         "vibes": ["authentic", "cozy", "local"],
@@ -111,7 +105,7 @@ async def create_admin_user(email: str, password: str) -> None:
 async def enrich_staged_venues() -> None:
     """Subcommand: enrich-staged
 
-    Reads PENDING_CURATION venue_staging records, selects main hero photo, authors Arabic copy,
+    Reads PENDING_CURATION venue_staging records, selects main hero photo, authors English copy,
     applies 2-citation verification gate, and updates status to ENRICHED (or REJECTED_UNVERIFIED).
     """
     logger.info("Starting AI Cultural Enrichment process for staged venues...")
@@ -146,12 +140,10 @@ async def enrich_staged_venues() -> None:
                 {
                     "slug": place_id.lower().replace("_", "-"),
                     "category_slug": "bars",
-                    "name_en": record.name_raw,
-                    "name_ar": record.name_raw,
-                    "description_en": f"Authentic venue located at {record.address_raw}.",
-                    "description_ar": f"مكان متميز يقع في {record.address_raw}.",
-                    "address_en": record.address_raw,
-                    "address_ar": record.address_raw,
+                    "name": record.name_raw,
+                    "description": f"Authentic venue located at {record.address_raw}.",
+                    "address": record.address_raw,
+                    "working_hours": getattr(record, "working_hours", None) or "5:00 PM - 2:00 AM",
                     "price_range": "$$",
                     "vibe_description": "Downtown Cairo hospitality",
                     "vibes": ["downtown", "cairo"],
@@ -174,12 +166,10 @@ async def enrich_staged_venues() -> None:
             enriched_payload = {
                 "slug": knowledge["slug"],
                 "category_slug": knowledge["category_slug"],
-                "name_en": knowledge["name_en"],
-                "name_ar": knowledge["name_ar"],
-                "description_en": knowledge["description_en"],
-                "description_ar": knowledge["description_ar"],
-                "address_en": knowledge["address_en"],
-                "address_ar": knowledge["address_ar"],
+                "name": knowledge["name"],
+                "description": knowledge["description"],
+                "address": knowledge["address"],
+                "working_hours": knowledge.get("working_hours", "5:00 PM - 2:00 AM"),
                 "google_maps_url": record.google_maps_url,
                 "latitude": float(lat),
                 "longitude": float(lon),
@@ -238,8 +228,7 @@ async def promote_staged_venues(all_records: bool = True) -> None:
             if not category:
                 category = Category(
                     slug=ingest_data.category_slug,
-                    name_en="Bars & Lounges",
-                    name_ar="بارات وصالونات",
+                    name="Bars & Lounges",
                 )
                 session.add(category)
                 await session.flush()
@@ -253,12 +242,10 @@ async def promote_staged_venues(all_records: bool = True) -> None:
 
             if existing_venue:
                 logger.info(f"Updating existing production venue: {existing_venue.slug}")
-                existing_venue.name_en = ingest_data.name_en
-                existing_venue.name_ar = ingest_data.name_ar
-                existing_venue.description_en = ingest_data.description_en
-                existing_venue.description_ar = ingest_data.description_ar
-                existing_venue.address_en = ingest_data.address_en
-                existing_venue.address_ar = ingest_data.address_ar
+                existing_venue.name = ingest_data.name
+                existing_venue.description = ingest_data.description
+                existing_venue.address = ingest_data.address
+                existing_venue.working_hours = ingest_data.working_hours
                 existing_venue.google_maps_url = ingest_data.google_maps_url
                 existing_venue.location = WKTElement(location_wkt, srid=4326)
                 existing_venue.price_range = ingest_data.price_range
@@ -270,12 +257,10 @@ async def promote_staged_venues(all_records: bool = True) -> None:
                 venue = Venue(
                     category_id=category.id,
                     slug=ingest_data.slug,
-                    name_en=ingest_data.name_en,
-                    name_ar=ingest_data.name_ar,
-                    description_en=ingest_data.description_en,
-                    description_ar=ingest_data.description_ar,
-                    address_en=ingest_data.address_en,
-                    address_ar=ingest_data.address_ar,
+                    name=ingest_data.name,
+                    description=ingest_data.description,
+                    address=ingest_data.address,
+                    working_hours=ingest_data.working_hours,
                     google_maps_url=ingest_data.google_maps_url,
                     location=WKTElement(location_wkt, srid=4326),
                     price_range=ingest_data.price_range,
@@ -297,7 +282,7 @@ async def promote_staged_venues(all_records: bool = True) -> None:
                     photo_record = VenuePhoto(
                         venue_id=venue.id,
                         photo_url=g_photo,
-                        caption=f"Gallery photo for {ingest_data.name_en}",
+                        caption=f"Gallery photo for {ingest_data.name}",
                     )
                     session.add(photo_record)
 
@@ -309,8 +294,7 @@ async def promote_staged_venues(all_records: bool = True) -> None:
                 if not vibe_tag:
                     vibe_tag = VibeTag(
                         slug=vibe_slug,
-                        name_en=vibe_slug.capitalize(),
-                        name_ar=vibe_slug.capitalize(),
+                        name=vibe_slug.capitalize(),
                     )
                     session.add(vibe_tag)
                     await session.flush()

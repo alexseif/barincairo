@@ -1,4 +1,3 @@
-
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from geoalchemy2.functions import ST_X, ST_Y
 from sqlalchemy import select
@@ -23,7 +22,7 @@ router = APIRouter()
 async def list_categories(
     session: AsyncSession = Depends(get_async_session),
 ) -> list[CategoryResponse]:
-    result = await session.execute(select(Category).order_by(Category.name_en))
+    result = await session.execute(select(Category).order_by(Category.name))
     categories = result.scalars().all()
     return [CategoryResponse.model_validate(c) for c in categories]
 
@@ -32,7 +31,7 @@ async def list_categories(
 async def list_vibes(
     session: AsyncSession = Depends(get_async_session),
 ) -> list[VibeTagResponse]:
-    result = await session.execute(select(VibeTag).order_by(VibeTag.name_en))
+    result = await session.execute(select(VibeTag).order_by(VibeTag.name))
     vibes = result.scalars().all()
     return [VibeTagResponse.model_validate(v) for v in vibes]
 
@@ -75,17 +74,15 @@ async def list_venues_geojson(
             properties=VenueProperties(
                 id=venue.id,
                 slug=venue.slug,
-                name_en=venue.name_en,
-                name_ar=venue.name_ar,
-                description_en=venue.description_en,
-                description_ar=venue.description_ar,
-                address_en=venue.address_en,
-                address_ar=venue.address_ar,
+                name=venue.name,
+                description=venue.description,
+                address=venue.address,
+                working_hours=venue.working_hours,
                 price_range=venue.price_range,
                 vibe_description=venue.vibe_description,
                 photo_url=venue.photo_url,
                 category_slug=venue.category.slug,
-                category_name=venue.category.name_en,
+                category_name=venue.category.name,
                 vibes=vibe_slugs,
             ),
         )
@@ -121,17 +118,15 @@ async def get_venue_detail(
         properties=VenueProperties(
             id=venue.id,
             slug=venue.slug,
-            name_en=venue.name_en,
-            name_ar=venue.name_ar,
-            description_en=venue.description_en,
-            description_ar=venue.description_ar,
-            address_en=venue.address_en,
-            address_ar=venue.address_ar,
+            name=venue.name,
+            description=venue.description,
+            address=venue.address,
+            working_hours=venue.working_hours,
             price_range=venue.price_range,
             vibe_description=venue.vibe_description,
             photo_url=venue.photo_url,
             category_slug=venue.category.slug,
-            category_name=venue.category.name_en,
+            category_name=venue.category.name,
             vibes=vibe_slugs,
         ),
     )

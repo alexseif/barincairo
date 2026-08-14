@@ -1,11 +1,9 @@
-
 from pydantic import BaseModel, ConfigDict, Field
 
 
 class CategoryBase(BaseModel):
     slug: str
-    name_en: str
-    name_ar: str
+    name: str
 
 
 class CategoryResponse(CategoryBase):
@@ -15,14 +13,12 @@ class CategoryResponse(CategoryBase):
 
 class VibeTagBase(BaseModel):
     slug: str
-    name_en: str
-    name_ar: str
+    name: str
 
 
 class VibeTagResponse(VibeTagBase):
     id: int
     model_config = ConfigDict(from_attributes=True)
-
 
 
 class GeoJSONGeometry(BaseModel):
@@ -33,12 +29,10 @@ class GeoJSONGeometry(BaseModel):
 class VenueProperties(BaseModel):
     id: int
     slug: str
-    name_en: str
-    name_ar: str
-    description_en: str | None = None
-    description_ar: str | None = None
-    address_en: str
-    address_ar: str
+    name: str
+    description: str | None = None
+    address: str
+    working_hours: str | None = None
     price_range: str = "$$"
     vibe_description: str | None = None
     photo_url: str | None = None

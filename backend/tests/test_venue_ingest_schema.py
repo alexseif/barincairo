@@ -8,12 +8,10 @@ def test_valid_venue_ingest_schema():
     valid_payload = {
         "slug": "cap-d-or",
         "category_slug": "bars",
-        "name_en": "Cap d'Or",
-        "name_ar": "كاب دي أور",
-        "description_en": "Historic Downtown watering hole.",
-        "description_ar": "بار تاريخي في وسط البلد.",
-        "address_en": "Abdel Khalek Sarwat St, Downtown",
-        "address_ar": "شارع عبد الخالق ثروت، وسط البلد",
+        "name": "Cap d'Or",
+        "description": "Historic Downtown watering hole.",
+        "address": "Abdel Khalek Sarwat St, Downtown",
+        "working_hours": "5:00 PM - 3:00 AM",
         "google_maps_url": "https://maps.google.com/?q=place_id:ChIJ12345",
         "latitude": 30.0450,
         "longitude": 31.2380,
@@ -30,6 +28,8 @@ def test_valid_venue_ingest_schema():
 
     schema = VenueIngestSchema(**valid_payload)
     assert schema.slug == "cap-d-or"
+    assert schema.name == "Cap d'Or"
+    assert schema.working_hours == "5:00 PM - 3:00 AM"
     assert schema.latitude == 30.0450
     assert len(schema.citations) == 2
 
@@ -38,10 +38,9 @@ def test_rejected_fewer_than_2_citations():
     invalid_payload = {
         "slug": "cap-d-or",
         "category_slug": "bars",
-        "name_en": "Cap d'Or",
-        "name_ar": "كاب دي أور",
-        "address_en": "Abdel Khalek Sarwat St",
-        "address_ar": "شارع عبد الخالق ثروت",
+        "name": "Cap d'Or",
+        "address": "Abdel Khalek Sarwat St",
+        "working_hours": "5:00 PM - 3:00 AM",
         "google_maps_url": "https://maps.google.com/?q=place_id:ChIJ12345",
         "latitude": 30.0450,
         "longitude": 31.2380,
@@ -59,10 +58,9 @@ def test_rejected_outside_bounding_box():
     invalid_payload = {
         "slug": "cap-d-or",
         "category_slug": "bars",
-        "name_en": "Cap d'Or",
-        "name_ar": "كاب دي أور",
-        "address_en": "Abdel Khalek Sarwat St",
-        "address_ar": "شارع عبد الخالق ثروت",
+        "name": "Cap d'Or",
+        "address": "Abdel Khalek Sarwat St",
+        "working_hours": "5:00 PM - 3:00 AM",
         "google_maps_url": "https://maps.google.com/?q=place_id:ChIJ12345",
         "latitude": 31.0000,
         "longitude": 31.2380,

@@ -36,10 +36,9 @@ def test_two_citation_gate_validation():
     valid_payload = {
         "slug": "test-venue",
         "category_slug": "bars",
-        "name_en": "Test Venue",
-        "name_ar": "مكان تجريبي",
-        "address_en": "123 Sarwat St",
-        "address_ar": "١٢٣ شارع ثروت",
+        "name": "Test Venue",
+        "address": "123 Sarwat St",
+        "working_hours": "5:00 PM - 2:00 AM",
         "google_maps_url": "https://maps.google.com/?q=place_id:ChIJ123",
         "latitude": 30.0450,
         "longitude": 31.2380,
