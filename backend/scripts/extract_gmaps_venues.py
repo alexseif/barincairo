@@ -67,6 +67,37 @@ DOWNTOWN_FIXTURES: list[dict[str, Any]] = [
             "Cozy traditional downtown pub atmosphere with attentive service.",
         ],
     },
+    {
+        "place_id": "ChIJ_odeon_rooftop_cairo_004",
+        "name_raw": "Odeon Palace Rooftop Bar",
+        "address_raw": "6 Abdel Hamid Said St, Downtown, Cairo, Egypt",
+        "latitude": 30.0485,
+        "longitude": 31.2410,
+        "google_maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJ_odeon_rooftop_cairo_004",
+        "candidate_photos": [
+            "https://images.unsplash.com/photo-1572116469696-31de0f17cc34?w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=1200&auto=format&fit=crop",
+        ],
+        "reviews": [
+            "24-hour rooftop terrace overlooking historic Downtown Cairo roofs.",
+            "Relaxed open-air atmosphere with views of classic 1930s architecture.",
+        ],
+    },
+    {
+        "place_id": "ChIJ_windsor_barrel_cairo_005",
+        "name_raw": "Windsor Barrel Bar",
+        "address_raw": "19 Al Alfi St, Downtown, Cairo, Egypt",
+        "latitude": 30.0515,
+        "longitude": 31.2462,
+        "google_maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJ_windsor_barrel_cairo_005",
+        "candidate_photos": [
+            "https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=1200&auto=format&fit=crop",
+        ],
+        "reviews": [
+            "Historic hotel bar with original wooden barrels and colonial memorabilia.",
+            "Charming time capsule in the heart of Downtown Cairo.",
+        ],
+    },
 ]
 
 
