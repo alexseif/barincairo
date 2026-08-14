@@ -48,7 +48,7 @@ flowchart TD
 #### 🤖 Agent 2: FullStack Developer Agent (`cairo-developer`)
 * **Role**: Frontend & Backend Implementation Engineer.
 * **Responsibilities**:
-  * Implements Next.js RSC components, MapLibre GL JS vector cartography, FastAPI backend routes, and SQLAdmin management views.
+  * Implements Vite 6 + React 19 SPA components, MapLibre GL JS vector cartography, FastAPI backend routes, and SQLAdmin management views.
   * Authors Vitest and Pytest TDD unit/integration/admin test suites for frontend and backend modules.
   * Ensures zero-lint errors, strict TypeScript compliance (`"strict": true`), and high performance (Lighthouse $\ge 90$).
 

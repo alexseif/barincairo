@@ -191,7 +191,32 @@ class Venue(Base):
 
 ## 6. Verification & Quality Sign-Off
 
-1. **Frontend TDD**: Executed via Vitest (`npm run test`) to verify MapLibre marker sync, filter state changes, and tooltip card touch targets.
+1. **Frontend TDD**: Executed via Vitest (`npm run test`) to verify MapLibre marker sync, filter state changes, carousel cycling, tooltip card interactions, and mobile combobox filters.
 2. **Backend TDD**: Executed via Pytest (`pytest backend/`) to verify spatial queries, GeoJSON generation, Pydantic 422 validations, rate-limiting, and SQLAdmin CRUD endpoints.
 3. **SQLAdmin Entity Management TDD**: Pytest suite (`test_admin.py`) verifying authenticated List, View, Create, Edit, and Delete actions across all 7 entities (`User`, `Category`, `VibeTag`, `Venue`, `VenueStaging`, `VenuePhoto`, `Subscriber`), ensuring zero 500 internal server errors.
 4. **CI/CD Integration**: Strict GitHub Actions deployment block on linting (`eslint`, `ruff`) or TypeScript compilation errors (`tsc --noEmit`).
+
+---
+
+## 7. Frontend Migration & Refinement Specification (Vite SPA)
+
+### 7.1 Framework & TDD Engine
+* **Build Tooling**: Vite 6 + `@vitejs/plugin-react` + Vitest + `@testing-library/react`.
+* **Application Shell**: `index.html` entrypoint mounting React SPA root in `src/main.tsx` and `src/App.tsx`.
+
+### 7.2 Data Contract & Python API Stream
+* **Schema Alignment**: Frontend `VenueProperties` strictly aligned with FastAPI Pydantic schema (`name`, `description`, `address`, `working_hours`, `vibe_description`, `price_range`, `category_slug`, `category_name`, `vibes`).
+* **Zero Hardcoded Overrides**: Complete removal of static `FALLBACK_VENUES` fallbacks. Map strictly displays feature array delivered by `GET /api/v1/venues`.
+
+### 7.3 Typography & Design Scale (`rem`)
+* **Site Title**: `2rem` (`text-[2rem]`)
+* **Site Tagline**: `0.6875rem` (`text-[0.6875rem]` / 11px)
+* **Header Menu**: `0.75rem` (`text-[0.75rem]` / 12px)
+* **Ground Rules Text**: Minimum `0.75rem` (12px) and larger
+
+### 7.4 Feature Component Specifications
+* **Hero Section**: Accessible hover/focus tooltip on "Wust El Balad" displaying `"Downtown"`.
+* **"A Good Place to Start" Carousel**: Sub-header `"Selected for the night"`, 1-of-3 handpicked venue hero card carousel controls, and full-width venue title layout on mobile.
+* **Ground Rules Grid**: 4 total rules displayed in a 2x2 responsive grid (1 column on mobile), adding Rule 4: *"Mindful Heritage & Neighborhood Respect"*.
+* **Mobile UX**: Two styled `<select>` comboboxes for Price & Vibe on mobile, taller map container (`min-h-[420px]`), and corrected smooth scrolling anchor for "Our Guide" (`#about`).
+
