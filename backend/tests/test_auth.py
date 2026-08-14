@@ -1,10 +1,11 @@
 import pytest
+from httpx import ASGITransport, AsyncClient
+from starlette.requests import Request
+
 from app.admin.auth import authentication_backend
 from app.cli import create_admin_user
 from app.core.config import settings
 from app.main import app
-from httpx import ASGITransport, AsyncClient
-from starlette.requests import Request
 
 
 async def ensure_superuser():
