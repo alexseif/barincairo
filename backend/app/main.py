@@ -10,6 +10,7 @@ from app.admin.views import (
     UserAdmin,
     VenueAdmin,
     VenuePhotoAdmin,
+    VenueStagingAdmin,
     VibeTagAdmin,
 )
 from app.api.v1.endpoints.subscribers import router as subscribers_router
@@ -63,6 +64,7 @@ app.include_router(subscribers_router, prefix=settings.API_V1_STR, tags=["Subscr
 admin = Admin(app, engine, title="Bar in Cairo Admin", authentication_backend=authentication_backend)
 admin.add_view(UserAdmin)
 admin.add_view(VenueAdmin)
+admin.add_view(VenueStagingAdmin)
 admin.add_view(CategoryAdmin)
 admin.add_view(VibeTagAdmin)
 admin.add_view(VenuePhotoAdmin)

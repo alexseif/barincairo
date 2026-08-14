@@ -1,9 +1,11 @@
 from typing import ClassVar
 
+from sqladmin import ModelView
+
 from app.models.subscribers import Subscriber
 from app.models.user import User
+from app.models.venue_staging import VenueStaging
 from app.models.venues import Category, Venue, VenuePhoto, VibeTag
-from sqladmin import ModelView
 
 
 class UserAdmin(ModelView, model=User):
@@ -37,6 +39,20 @@ class VenueAdmin(ModelView, model=Venue):
     column_searchable_list: ClassVar = [Venue.name_en, Venue.slug, Venue.address_en]
     column_filters: ClassVar = [Venue.price_range, Venue.is_active]
     icon = "fa-solid fa-martini-glass-citrus"
+
+
+class VenueStagingAdmin(ModelView, model=VenueStaging):
+    column_list: ClassVar = [
+        VenueStaging.id,
+        VenueStaging.place_id,
+        VenueStaging.name_raw,
+        VenueStaging.google_maps_url,
+        VenueStaging.status,
+        VenueStaging.created_at,
+    ]
+    column_searchable_list: ClassVar = [VenueStaging.name_raw, VenueStaging.place_id, VenueStaging.google_maps_url]
+    column_filters: ClassVar = [VenueStaging.status]
+    icon = "fa-solid fa-layer-group"
 
 
 class VenuePhotoAdmin(ModelView, model=VenuePhoto):
