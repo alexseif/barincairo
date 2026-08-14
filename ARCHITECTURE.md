@@ -67,6 +67,24 @@ CREATE TABLE subscribers (
     source VARCHAR(50) DEFAULT 'whatsapp_dispatch',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Hybrid Ingestion Staging Queue
+CREATE TABLE venue_staging (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    place_id VARCHAR(255) UNIQUE NOT NULL,
+    google_maps_url TEXT NOT NULL,
+    name_raw VARCHAR(255) NOT NULL,
+    address_raw TEXT NOT NULL,
+    location GEOMETRY(Point, 4326) NOT NULL,
+    raw_payload JSONB NOT NULL,
+    enriched_payload JSONB,
+    status VARCHAR(50) DEFAULT 'PENDING_CURATION',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_staging_location ON venue_staging USING GIST (location);
+CREATE INDEX idx_staging_status ON venue_staging(status);
 ```
 
 ### Spatial Queries & Algorithms

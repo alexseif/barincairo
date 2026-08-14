@@ -18,6 +18,7 @@ The project governance and architectural standards are codified across primary s
 2. **[`STANDARDS.md`](./STANDARDS.md)**: Coding standards, security protocols, 3NF database schema, Star Schema analytics analysis, framework directory layouts, and the **Planner/Building Agent token protocol**.
 3. **[`ARCHITECTURE.md`](./ARCHITECTURE.md)**: Technical specs for decoupled Next.js + FastAPI + PostGIS infrastructure, Docker container isolation, SQLAdmin dashboard, host Nginx proxy, and spatial query patterns.
 4. **[`REQUIREMENTS.md`](./REQUIREMENTS.md)**: Functional/non-functional requirements, Web Vitals performance targets ($LCP \le 1.2s$), JSON-LD SEO schemas, `/llm.txt` GEO endpoints, and agent orchestration directives.
+5. **[`docs/ingestion-pipeline.md`](./docs/ingestion-pipeline.md)**: Operational guide for Google Places/Maps extraction, PostGIS staging, AI cultural enrichment, main hero photo selection, 2-citation verification gate, and production promotion.
 
 ---
 
@@ -57,6 +58,25 @@ Zero credentials or secret keys are committed to version control.
  │  PostgreSQL + PostGIS Database (SRID 4326) │
  └─────────────────────────────────────────┘
 ```
+
+---
+
+## 🔌 Hybrid Content Ingestion Pipeline
+
+Continuous venue discovery, extraction, enrichment, and promotion pipeline:
+
+```bash
+# 1. Deterministic Google Maps Extraction (Phase 1)
+PYTHONPATH=. venv/bin/python scripts/extract_gmaps_venues.py --bbox "30.0380,31.2300,30.0520,31.2480"
+
+# 2. AI Cultural Enrichment & 2-Citation Gate (Phase 2)
+PYTHONPATH=. venv/bin/python -m app.cli enrich-staged
+
+# 3. Production Promotion & PostGIS Ingestion (Phase 3)
+PYTHONPATH=. venv/bin/python -m app.cli promote-staged --all
+```
+
+For detailed bounding box parameters, custom neighborhood configuration, and deduplication rules, see **[`docs/ingestion-pipeline.md`](./docs/ingestion-pipeline.md)**.
 
 ---
 
