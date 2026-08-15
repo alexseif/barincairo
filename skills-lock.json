@@ -1,0 +1,197 @@
+{
+  "version": 1,
+  "skills": {
+    "api-design-standards": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/developer-experience/skills/api-design-standards/SKILL.md",
+      "computedHash": "0bc7237224156045f353c888c961fad90bbcaa8d44cac72e9409b02972891a8c"
+    },
+    "code-quality-analysis": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/core/skills/code-quality-analysis/SKILL.md",
+      "computedHash": "53a36d9c8e478be6a1ce8af48d17db35b04cc77116bdc3a52f6a3eed911e148c"
+    },
+    "code-style": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/developer-experience/skills/code-style/SKILL.md",
+      "computedHash": "da972b72d87d24277098552af1199d2735094befb4158a2d85c69f7712022b6b"
+    },
+    "creative-writing": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/creative-writing/skills/creative-writing/SKILL.md",
+      "computedHash": "25d84c096b75ac67e79d62f6376f703f5b4988418339ec805aa3ff7c5558a125"
+    },
+    "data-modeling": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/data-quality/skills/data-modeling/SKILL.md",
+      "computedHash": "80834cc62fcac8571f3c79d577c74cf7383eecc610cab864ead48140c51c8d52"
+    },
+    "data-validation": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/data-quality/skills/data-validation/SKILL.md",
+      "computedHash": "d96cfbc7d6734a2d8b6298f0119de82294116a1e31cc14dacb508ce0cc5591c6"
+    },
+    "database-conventions": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/data-quality/skills/database-conventions/SKILL.md",
+      "computedHash": "4908b83ae2275d6b76a7640b625390c7e226a9264bc7feb1cba8f27b66ccb051"
+    },
+    "documentation-alignment": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/core/skills/documentation-alignment/SKILL.md",
+      "computedHash": "25676ea375a8dac90f3e7b419e27a264cf94a18254ab76752a7f732f1c2a9f68"
+    },
+    "documentation-architecture": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/developer-experience/skills/documentation-architecture/SKILL.md",
+      "computedHash": "27df7ccbcff7c89b7d5673fc3a4e15e9b6f235d00bab5502727df3ef75f2f090"
+    },
+    "evaluation": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/core/skills/evaluation/SKILL.md",
+      "computedHash": "acdb378ac0382e0d5d18f81fc018fc63a961fc6efb9e6f161094f4b477fad748"
+    },
+    "incident-response": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/incident-response/skills/incident-response/SKILL.md",
+      "computedHash": "d005a48193008f2ec32cf53a200a93faea422dc568ea230723142e59ba08f914"
+    },
+    "llm-project-development": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/core/skills/llm-project-development/SKILL.md",
+      "computedHash": "05dedb6456cb49aedcbf61499f84fbcca8954b16052e5cd82d203abc1dd8b18c"
+    },
+    "onboarding-coordination": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/developer-experience/skills/onboarding-coordination/SKILL.md",
+      "computedHash": "e3e938d26580077c1bfc03abe3f7d5ebe0399f51451bcf84ace164e5d5dbb82d"
+    },
+    "ontological-documentation": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/developer-experience/skills/ontological-documentation/SKILL.md",
+      "computedHash": "481e60b4189b941c6fe33813c214a7d785a79d7b390a9f41ad17e7af8a00b723"
+    },
+    "performance-optimization": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/core/skills/performance-optimization/SKILL.md",
+      "computedHash": "466700e741ca321f2fbb77d7355a3898c8905b0446bfc091ed662ba59ecdb98d"
+    },
+    "plugin-audit": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/plugin-auditor/skills/plugin-audit/SKILL.md",
+      "computedHash": "5b2318f31b72d6c16ec07ab7f6f569dd4afa657f2cc609a01972b1573b69c9f1"
+    },
+    "pr-template": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/developer-experience/skills/pr-template/SKILL.md",
+      "computedHash": "9bc1c050cad99d03fa1af222ce228c6d44f8250afea5913696af33b342551c90"
+    },
+    "project-scaffolding": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/core/skills/project-scaffolding/SKILL.md",
+      "computedHash": "1f2ec041ba0dfad7f2095895f149c84c5e5ea2ca50325c206c164ca429e7bc0f"
+    },
+    "project-structure": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/developer-experience/skills/project-structure/SKILL.md",
+      "computedHash": "fa48b6fcd544e8f16a591f78a288577b4cdbf7e1e91e8a5819d5bd1e03b3e7b8"
+    },
+    "prompt-engineering": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/core/skills/prompt-engineering/SKILL.md",
+      "computedHash": "a1da34cac1d618d6d9aab99bf99c17cde16611f30688cbcd50bf7b12b375e47f"
+    },
+    "react-tanstack-testing": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/testing/skills/react-tanstack-testing/SKILL.md",
+      "computedHash": "b31ef79334eafcfa41520e885342f4ac5064753534b01b33aff636e2d3ae8dda"
+    },
+    "seo-geo": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/creative-writing/skills/seo-geo/SKILL.md",
+      "computedHash": "ffba17a73b8d2529a63da5a9c66ea7de184b54d5c8ceaae4a11f8a6421680daf"
+    },
+    "skill-creator": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/core/skills/skill-creator/SKILL.md",
+      "computedHash": "852581151d86b861167a19c0d98cd137783c94b306d760c8ddb0b07e21936283"
+    },
+    "smart-debugging": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/incident-response/skills/smart-debugging/SKILL.md",
+      "computedHash": "78c1a5e5b3e630a6a5c84b73ca7946a42d4d660596d27ddb56fc06ef1c5fbd97"
+    },
+    "suite-audit": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/plugin-auditor/skills/suite-audit/SKILL.md",
+      "computedHash": "77dbe38504f70e505a229c36a78896a9adb9f7db78011a62b95e0e0431b17ee9"
+    },
+    "tanstack-patterns": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/research/skills/tanstack-patterns/SKILL.md",
+      "computedHash": "4d915e1f9e85deddc3e06bce5dbd3d7a38f3e94f9a628404bebc7e07318bcdf5"
+    },
+    "tdd-orchestration": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/core/skills/tdd-orchestration/SKILL.md",
+      "computedHash": "c5c340477d606d7fac219a667faae884e4fd59651d0145cc77bf1597a6f13bba"
+    },
+    "tdd-python": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/core/skills/tdd-python/SKILL.md",
+      "computedHash": "89965da588a6cdc992a1bccbb81bfd2285bc47350e38f3bf6632922377fc9ad9"
+    },
+    "tdd-typescript": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/core/skills/tdd-typescript/SKILL.md",
+      "computedHash": "0fd4ffa9fabda1995fd357274018153e8bfd99e9bcc7ca715bb0afd39bce1abc"
+    },
+    "test-generation": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/testing/skills/test-generation/SKILL.md",
+      "computedHash": "6fd9362f3b75f84d67c6fb0ecd8b004d20e1bce9dbce512a7a01bd3a1a0c4fee"
+    },
+    "testing-strategy": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/testing/skills/testing-strategy/SKILL.md",
+      "computedHash": "bfceb9e3e0b2985ac342760f25e135cb9ef8f1f0b30c90031b03cc5523eb439d"
+    },
+    "tool-design": {
+      "source": "greyhaven-ai/claude-code-config",
+      "sourceType": "github",
+      "skillPath": "grey-haven-plugins/core/skills/tool-design/SKILL.md",
+      "computedHash": "9637ee2754769decd416ad184c2c0fbddb50bb5e53e1e195ca35985e4761bb22"
+    }
+  }
+}

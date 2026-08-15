@@ -1,0 +1,61 @@
+---
+name: code-quality-analysis
+description: "Multi-mode code quality analysis covering security reviews (OWASP Top 10), clarity refactoring (readability rules), synthesis analysis (cross-file issues), and DDD/DRY lenses (flags mechanical naming, primitive obsession, domain rules leaking into infrastructure, and premature abstractions via the three-occurrences-same-concept rule). Supports team-mode parallel analysis when invoked from quality-pipeline. Use when reviewing code for security vulnerabilities, improving code readability, conducting quality audits, pre-deployment checks, or when user mentions 'code quality', 'code review', 'security review', 'refactoring', 'code smell', 'OWASP', 'code clarity', 'primitive obsession', 'value object', 'ubiquitous language', 'DRY', 'premature abstraction', or 'quality audit'."
+# v2.0.43: Skills to auto-load for quality analysis subagents
+skills:
+  - code-style
+  - documentation-alignment
+# v2.0.74: Restrict tools for analysis-focused work
+allowed-tools:
+  - Read
+  - Grep
+  - Glob
+  - TodoWrite
+  - Write
+  - Edit
+  - Task
+  - Teammate
+  - SendMessage
+  - TaskCreate
+  - TaskUpdate
+  - TaskList
+  - TaskGet
+---
+
+# Code Quality Analysis Skill
+
+Multi-mode code quality specialist with security review, clarity refactoring, and synthesis analysis.
+
+## Description
+
+Comprehensive code quality analysis including security vulnerability detection, readability improvements, and cross-file issue synthesis.
+
+## What's Included
+
+- **Examples**: Security reviews, refactoring patterns, quality improvements
+- **Reference**: OWASP Top 10, code smells, refactoring catalog
+- **Templates**: Code review templates, security audit structures
+- **Checklists**: Quality verification, security compliance
+
+## Modes
+
+1. **Security Review** - Find vulnerabilities (OWASP Top 10)
+2. **Clarity Refactoring** - Improve readability (10 rules)
+3. **Synthesis Analysis** - Cross-file issues
+4. **Domain Lens (DDD)** - Flag mechanical naming, primitive obsession, and domain rules leaking into routes/components/stores; recommend value-object or branded-type promotions
+5. **Duplication Lens (principled DRY)** - Approve extraction only when the same domain concept repeats at ≥3 sites with the same meaning; reject premature DRY and accidental-similarity extractions
+
+## Use This Skill When
+
+- Reviewing code for security issues
+- Improving code readability
+- Comprehensive quality audits
+- Pre-deployment checks
+
+## Related Agents
+
+- `code-quality-analyzer` - Automated quality analysis
+
+---
+
+**Skill Version**: 1.2
