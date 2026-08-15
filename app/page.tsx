@@ -364,9 +364,9 @@ export default function Home() {
         </div>
 
         {selectedProps ? (
-          <article className="grid overflow-hidden border border-primary/25 bg-card sm:grid-cols-[0.85fr_1.15fr]">
+          <article className="grid overflow-hidden border border-primary/25 bg-card sm:grid-cols-[0.85fr_1.15fr] min-h-[480px] sm:min-h-[520px]">
             <div
-              className="min-h-72 bg-cover bg-center"
+              className="h-full min-h-[260px] sm:min-h-full bg-cover bg-center"
               style={{
                 backgroundImage: `url(${
                   selectedProps.photo_url ||
@@ -377,10 +377,10 @@ export default function Home() {
               aria-label={`${getVenueName(selectedProps)} atmosphere`}
             />
 
-            <div className="flex flex-col justify-between gap-8 p-6 lg:p-9">
+            <div className="flex flex-col justify-between gap-6 p-6 lg:p-9 h-full">
               <div>
                 {/* Mobile View Layout (8.3): Category, Pricing & Search button top row, Venue Name full width underneath */}
-                <div className="mb-5 flex flex-col gap-3">
+                <div className="mb-4 flex flex-col gap-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span className="font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-accent">
@@ -412,7 +412,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                <p className="max-w-md font-serif text-lg leading-relaxed text-primary/80">
+                <p className="max-w-md font-serif text-lg leading-relaxed text-primary/80 line-clamp-4">
                   {getVenueDescription(selectedProps)}
                 </p>
               </div>

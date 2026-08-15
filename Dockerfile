@@ -1,19 +1,35 @@
-# --- Base Node Image ---
-FROM node:20-alpine AS runner
+# --- Stage 1: Build Vite SPA ---
+FROM node:20-alpine AS builder
 WORKDIR /app
 
-ENV NODE_ENV=production
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
+# Copy package descriptors & configs
+COPY package*.json tsconfig*.json vite.config.ts openapi.json ./
+RUN npm ci --legacy-peer-deps
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+# Copy application source code
+COPY . .
 
-COPY public ./public
-COPY --chown=nextjs:nodejs .next/standalone ./
-COPY --chown=nextjs:nodejs .next/static ./.next/static
+# Build Vite SPA production bundle
+RUN npm run build
 
-USER nextjs
+# --- Stage 2: Serve SPA with Nginx ---
+FROM nginx:alpine AS runner
+WORKDIR /usr/share/nginx/html
+
+# Clean default Nginx files and copy Vite dist output
+RUN rm -rf ./*
+COPY --from=builder /app/dist ./
+
+# SPA fallback configuration for client-side routing
+RUN echo 'server { \
+    listen 3000; \
+    server_name _; \
+    root /usr/share/nginx/html; \
+    index index.html; \
+    location / { \
+        try_files $uri $uri/ /index.html; \
+    } \
+}' > /etc/nginx/conf.d/default.conf
+
 EXPOSE 3000
-
-CMD ["node", "server.js"]
+CMD ["nginx", "-g", "daemon off;"]
