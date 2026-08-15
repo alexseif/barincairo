@@ -50,6 +50,7 @@ Welcome to the **barincairo.com** documentation hub. Our documentation architect
 
 - **[REST API Specifications](reference/api-endpoints.md)**: Comprehensive endpoint contracts, GeoJSON payloads, and error models.
 - **[PostGIS Database Schema](reference/database-schema.md)**: Spatial tables (`venues`, `venue_staging`), spatial indexes, and CRS specifications.
+- **[Repository Project Structure](reference/project-structure.md)**: File organization, naming conventions, and structural compliance matrix.
 - **[Environment & Configuration Matrix](reference/environment-variables.md)**: Environment variable definitions and deployment settings.
 - **[Development & Code Style Standards](reference/code-standards.md)**: Code style, linting, and project conventions.
 
