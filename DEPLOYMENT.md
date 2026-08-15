@@ -38,11 +38,7 @@ cat ~/.ssh/barincairo_deploy_key
 Go to your GitHub repository: **https://github.com/alexseif/barincairo**  
 Navigate to **Settings** $\rightarrow$ **Secrets and variables** $\rightarrow$ **Actions** $\rightarrow$ **New repository secret**:
 
-| Secret Name | Description / Value |
-| :--- | :--- |
-| `HOST_IP` | Your Ubuntu server's public IP address (e.g. `123.45.67.89`). |
-| `HOST_USER` | Your SSH username on the server (e.g. `alexseif`). |
-| `SSH_PRIVATE_KEY` | Paste the **entire contents** of `~/.ssh/barincairo_deploy_key` (including `-----BEGIN OPENSSH PRIVATE KEY-----` and `-----END OPENSSH PRIVATE KEY-----`). |
+
 
 ---
 
