@@ -165,3 +165,20 @@ CREATE INDEX idx_staging_status ON venue_staging(status);
   1. Automated linting and Next.js build verification in GitHub runner.
   2. SSH authentication into host server.
   3. Git pull and container redeployment via `docker compose up -d --build`.
+
+---
+
+## 8. Database Persistence & Ingestion Architecture (Option 1)
+
+1. **Deprecation of Hardcoded Seed Script**:
+   - `backend/app/seed.py` and hardcoded seed lists are fully deprecated.
+   - Database schema initialization is handled exclusively via Alembic migrations (`0001_initial_schema`), while establishment data enters solely via the dynamic extraction and staging pipeline.
+2. **Database Container Volume Persistence**:
+   - PostgreSQL volume (`postgres_data`) persists all database states across container rebuilds (`docker compose up -d --build`) and restarts (`docker compose down` without `-v`).
+   - Production and staged venue entries are never reset or overwritten upon container recreation.
+3. **Dynamic Multi-Region Scraping Pipeline**:
+   - **Ingestion Entrypoint**: `backend/scripts/extract_gmaps_venues.py` dynamically extracts venue datasets via query parameters (`--query "bars in Heliopolis"`, `--limit 10`, `--bbox`/`--region`).
+   - **Operational Metadata**: Captures Google Maps opening hours and maps them directly to `VenueStaging.working_hours` and `raw_payload`.
+   - **PostGIS Spatial Deduplication**: Enforces 3-tier deduplication (`place_id`, PostGIS `ST_DWithin` < 15m in `venue_staging`, and `ST_DWithin` < 15m in `venues`).
+   - **Staging to Production Flow**: Scraped entries enter `venue_staging` with status `PENDING_CURATION`, pass through AI enrichment (`cli.py enrich-staged`), and are published to production `venues` (`cli.py publish-staged`).
+

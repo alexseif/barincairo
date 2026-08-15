@@ -32,7 +32,6 @@ barincairo.com/
 │   ├── app/
 │   │   ├── main.py              # FastAPI app entry point
 │   │   ├── cli.py               # Ingestion CLI commands & data tasks
-│   │   ├── seed.py              # Database seeding harness
 │   │   ├── admin/               # SQLAdmin curation panel views
 │   │   ├── api/                 # REST & GeoJSON API endpoint routers
 │   │   ├── core/                # Database engine, session, & config settings

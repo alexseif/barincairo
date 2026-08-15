@@ -10,7 +10,7 @@
 
 - **Version 1.4.0 Release Notes**:
   - ✅ **Google Analytics (GA4)**: Integrated direct tracking via `@next/third-parties/google` (`NEXT_PUBLIC_GA_ID`).
-  - ✅ **PostGIS Data Schema & Initial Seeding**: Populated 15 curated Downtown Cairo establishments, 7 Categories, and 7 Vibe tags in [`backend/app/seed.py`](file:///var/www/barincairo.com/backend/app/seed.py) & synchronized with [`lib/api.ts`](file:///var/www/barincairo.com/lib/api.ts).
+  - ✅ **PostGIS Data Schema & Volume Persistence**: Initial schema via Alembic migrations (`0001_initial_schema`) with persistent Postgres volume storage (`postgres_data`). Hardcoded `seed.py` removed in favor of dynamic staging pipeline.
   - ✅ **WebGL Vector Map & Filtering**: Interactive MapLibre GL JS map with 44x44px touch targets and in-memory/API filtering by Vibe & Price.
 
 ---

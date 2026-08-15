@@ -83,3 +83,14 @@ flowchart TD
    * **Vintage Faded Gold**: `#ad793b`
    * **Deep Nile Green**: `#24332d`
    * **Dark Mahogany**: `#24332d`
+
+---
+
+## 4. Persistent Database & Scraper Ingestion Principles
+
+1. **No Seed Reset**: Hardcoded seed script `seed.py` is removed. All production venues persist indefinitely inside the `postgres_data` Docker volume.
+2. **Dynamic Ingestion Flow**: Venues across Cairo/Egypt are ingested dynamically:
+   - Scraper (`extract_gmaps_venues.py`) queries region/district targets (e.g., Downtown, Heliopolis, Maadi) with specified batch limits and extracts working hours.
+   - Spatial PostGIS 15m deduplication ensures no duplicate listings enter staging.
+   - Enriched entries move from `venue_staging` to production `venues` via AI content curation and human validation.
+

@@ -227,3 +227,23 @@ class Venue(Base):
 * **Ground Rules Grid**: 4 total rules displayed in a 2x2 responsive grid (1 column on mobile), adding Rule 4: *"Mindful Heritage & Neighborhood Respect"*.
 * **Mobile UX**: Two styled `<select>` comboboxes for Price & Vibe on mobile, taller map container (`min-h-[420px]`), and corrected smooth scrolling anchor for "Our Guide" (`#about`).
 
+---
+
+## 8. Database Persistence & Ingestion Specification (Option 1)
+
+### 8.1 Removal of Static Seed Script
+* `backend/app/seed.py` is removed from the codebase.
+* Data initialization relies solely on Alembic schema migrations (`0001_initial_schema`).
+* Database volume `postgres_data` preserves production table data across container rebuilds (`docker compose up --build`).
+
+### 8.2 Dynamic Scraping & Staging Specification (`extract_gmaps_venues.py`)
+* **CLI Parameters**:
+  * `--query`: Target search string (e.g., `"bars in Heliopolis"`, `"rooftop bars in Downtown Cairo"`).
+  * `--limit`: Maximum venue limit per batch execution (e.g., `10`).
+  * `--bbox`: Coordinates bounding box `lat_min,lon_min,lat_max,lon_max` (defaults to target area).
+* **Metadata Extraction**:
+  * Extracts opening/working hours from Google Maps API or web scraping payload and stores in `raw_payload["working_hours"]` and `VenueStaging.working_hours`.
+* **Deduplication**:
+  * 3-tier PostGIS spatial deduplication (`place_id`, 15m radius in `venue_staging`, 15m radius in `venues`).
+
+
