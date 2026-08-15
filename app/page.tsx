@@ -28,6 +28,8 @@ import {
 import PersonalCrawlCard from "@/components/ui/PersonalCrawlCard";
 import { CONTACT_CONFIG } from "@/lib/config";
 
+import { useVenuesQuery } from "@/lib/hooks";
+
 const VIBE_FILTERS = [
   { slug: "all", name: "All Vibes" },
   { slug: "fancy", name: "Fancy" },
@@ -47,10 +49,6 @@ const PRICE_FILTERS = [
 ];
 
 export default function Home() {
-  const [venuesData, setVenuesData] = useState<GeoJSONFeatureCollection>({
-    type: "FeatureCollection",
-    features: [],
-  });
   const [selectedFeature, setSelectedFeature] = useState<GeoJSONFeature | null>(null);
   const [carouselIndex, setCarouselIndex] = useState(0);
 
@@ -58,28 +56,28 @@ export default function Home() {
   const [activePriceFilter, setActivePriceFilter] = useState("all");
 
   const [mobileNav, setMobileNav] = useState(false);
-  const [loading, setLoading] = useState(true);
+
+  const filters = {
+    vibe: activeVibeFilter !== "all" ? activeVibeFilter : undefined,
+    price_range: activePriceFilter !== "all" ? activePriceFilter : undefined,
+  };
+
+  const { data: venuesData = { type: "FeatureCollection", features: [] }, isLoading: loading } = useVenuesQuery(filters);
 
   useEffect(() => {
-    async function loadVenues() {
-      setLoading(true);
-      const data = await fetchVenuesGeoJSON({
-        vibe: activeVibeFilter !== "all" ? activeVibeFilter : undefined,
-        price_range: activePriceFilter !== "all" ? activePriceFilter : undefined,
+    if (venuesData.features.length > 0) {
+      setSelectedFeature((prev) => {
+        if (prev && venuesData.features.some((f) => f.properties.id === prev.properties.id)) {
+          return prev;
+        }
+        return venuesData.features[0];
       });
-      setVenuesData(data);
-      if (data.features.length > 0) {
-        setSelectedFeature(data.features[0]);
-        setCarouselIndex(0);
-      } else {
-        setSelectedFeature(null);
-        setCarouselIndex(0);
-      }
-      setLoading(false);
+      setCarouselIndex(0);
+    } else {
+      setSelectedFeature(null);
+      setCarouselIndex(0);
     }
-
-    loadVenues();
-  }, [activeVibeFilter, activePriceFilter]);
+  }, [venuesData]);
 
   // Selected Carousel Features (Top 3 venues or filtered features)
   const carouselVenues = venuesData.features.slice(0, 3);

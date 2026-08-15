@@ -1,5 +1,6 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import Home from '@/app/page'
 import * as api from '@/lib/api'
 
@@ -54,6 +55,21 @@ const mockBackendVenuesResponse: api.GeoJSONFeatureCollection = {
   ],
 }
 
+function renderWithQueryClient(ui: React.ReactElement) {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  })
+  return render(
+    <QueryClientProvider client={queryClient}>
+      {ui}
+    </QueryClientProvider>
+  )
+}
+
 describe('Home Page Component API Integration', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
@@ -62,7 +78,7 @@ describe('Home Page Component API Integration', () => {
   it('renders venue name, description, address, and category from backend Python API schema', async () => {
     vi.spyOn(api, 'fetchVenuesGeoJSON').mockResolvedValue(mockBackendVenuesResponse)
 
-    render(<Home />)
+    renderWithQueryClient(<Home />)
 
     // Wait for async Python API fetch to update state
     await waitFor(() => {
@@ -80,7 +96,7 @@ describe('Home Page Component API Integration', () => {
   it('cycles through 3-venue carousel correctly when next/prev buttons are clicked', async () => {
     vi.spyOn(api, 'fetchVenuesGeoJSON').mockResolvedValue(mockBackendVenuesResponse)
 
-    render(<Home />)
+    renderWithQueryClient(<Home />)
 
     await waitFor(() => {
       expect(screen.getByRole('heading', { name: 'El Horeya Pub & Cafe' })).toBeInTheDocument()
@@ -109,7 +125,7 @@ describe('Home Page Component API Integration', () => {
       features: [],
     })
 
-    render(<Home />)
+    renderWithQueryClient(<Home />)
 
     await waitFor(() => {
       expect(
@@ -118,3 +134,4 @@ describe('Home Page Component API Integration', () => {
     })
   })
 })
+

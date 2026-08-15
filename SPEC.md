@@ -201,15 +201,19 @@ class Venue(Base):
 
 ---
 
-## 7. Frontend Specification (Next.js 15 App Router)
+## 7. Frontend Specification (Vite 8 + React 19 SPA)
 
 ### 7.1 Framework & TDD Engine
-* **Build Tooling**: Next.js 15 (App Router) + React 19 + Vitest + `@testing-library/react`.
-* **Application Shell**: Next.js App Router entrypoint mounting root layout and page in `app/layout.tsx` and `app/page.tsx`.
+* **Build Tooling**: Vite 8 + React 19 + TypeScript + Vitest + `@testing-library/react`.
+* **Application Shell**: Client-side Single Page Application mounted via `src/main.tsx` wrapped with `<QueryClientProvider client={queryClient}>` and `<ReactQueryDevtools />`.
 
-### 7.2 Data Contract & Python API Stream
+### 7.2 Data Contract & TanStack Query Layer
+* **State & Data Management**: `@tanstack/react-query` v5 configured in `lib/queryClient.ts` (`staleTime: 60,000ms`, `retry: 1`, `refetchOnWindowFocus: false`).
+* **Custom Query Hooks**: Custom hooks in `lib/hooks.ts`:
+  * `useVenuesQuery(filters)`: Streams GeoJSON spatial vector features via query key `['venues', filters]`.
+  * `useSubscribeMutation()`: Handles WhatsApp registration POST requests via mutation.
 * **Schema Alignment**: Frontend `VenueProperties` strictly aligned with FastAPI Pydantic schema (`name`, `description`, `address`, `working_hours`, `vibe_description`, `price_range`, `category_slug`, `category_name`, `vibes`).
-* **Graceful Degradation Fallbacks**: Dynamic PostGIS feature array fetched via `GET /api/v1/venues`, falling back gracefully to static `FALLBACK_VENUES` in `lib/api.ts` if the backend API service is unreachable.
+* **Testing Wrappers**: Vitest test harness in `__tests__/page.test.tsx` uses `renderWithQueryClient` helper to wrap components in isolated test `QueryClient` instances.
 
 ### 7.3 Typography & Design Scale (`rem`)
 * **Site Title**: `2rem` (`text-[2rem]`)

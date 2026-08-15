@@ -118,12 +118,13 @@ CREATE INDEX idx_staging_status ON venue_staging(status);
 ## 4. Frontend & Cartographic Engine Specification
 
 - **Framework**: Vite 8 + React 19 + TypeScript (Client-side Single Page Application)
+- **State & Data Management**: **TanStack Query (`@tanstack/react-query` v5)** for declarative server state management, automated spatial query key caching (`['venues', filters]`), deduplication, background refetching, and mutation handling (`useSubscribeMutation`). Configured with a global `QueryClient` (`lib/queryClient.ts`) enforcing `staleTime: 60000ms` (1 minute), `retry: 1`, `refetchOnWindowFocus: false`, and `<ReactQueryDevtools>` in `src/main.tsx`.
 - **Styling**: Tailwind CSS v4 with custom visual theme tokens and strict `rem` typography scale:
   - Site Title: `2rem` (32px)
   - Site Tagline: `0.6875rem` (11px)
   - Navigation Menu: `0.75rem` (12px)
   - Minimum font baseline across ground rules grid and UI cards: `0.75rem` (12px)
-- **Data Integration & Models**: Consumes Python FastAPI backend (`GET /api/v1/venues`) directly as the single source of truth using aligned single-language schemas (`name`, `description`, `address`, `working_hours`, `price_range`, `vibe_description`, `photo_url`, `category_slug`, `category_name`, `vibes`). Hardcoded fallback mock datasets are removed.
+- **Data Integration & Models**: Consumes Python FastAPI backend (`GET /api/v1/venues`) directly as the single source of truth using custom TanStack hooks (`useVenuesQuery` in `lib/hooks.ts`) and aligned single-language schemas (`name`, `description`, `address`, `working_hours`, `price_range`, `vibe_description`, `photo_url`, `category_slug`, `category_name`, `vibes`). Hardcoded fallback mock datasets are removed.
 - **Cartographic Engine**: WebGL Spatial Renderer (MapLibre GL JS vector tiles).
   * Mobile viewports feature compact combobox dropdown filters for Price & Vibe and an expanded map height (`min-h-[480px]`).
   * Hero section includes an interactive "Wust El Balad" tooltip ("Downtown").
