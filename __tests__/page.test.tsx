@@ -13,6 +13,11 @@ vi.mock('@/components/map/MapLibreMap', () => ({
   ),
 }))
 
+vi.mock('@tanstack/react-router', () => ({
+  useSearch: () => ({ vibe: 'all', price_range: 'all' }),
+  useNavigate: () => vi.fn(),
+}))
+
 const mockBackendVenuesResponse: api.GeoJSONFeatureCollection = {
   type: 'FeatureCollection',
   features: [

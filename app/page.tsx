@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import {
   ArrowUpRight,
   ChevronDown,
@@ -16,7 +16,7 @@ import {
   Tag,
   DollarSign,
 } from "lucide-react";
-import MapLibreMap from "@/components/map/MapLibreMap";
+const MapLibreMap = lazy(() => import("@/components/map/MapLibreMap"));
 import {
   fetchVenuesGeoJSON,
   getVenueName,
@@ -29,6 +29,7 @@ import PersonalCrawlCard from "@/components/ui/PersonalCrawlCard";
 import { CONTACT_CONFIG } from "@/lib/config";
 
 import { useVenuesQuery } from "@/lib/hooks";
+import { useSearch, useNavigate } from "@tanstack/react-router";
 
 const VIBE_FILTERS = [
   { slug: "all", name: "All Vibes" },
@@ -52,8 +53,31 @@ export default function Home() {
   const [selectedFeature, setSelectedFeature] = useState<GeoJSONFeature | null>(null);
   const [carouselIndex, setCarouselIndex] = useState(0);
 
-  const [activeVibeFilter, setActiveVibeFilter] = useState("all");
-  const [activePriceFilter, setActivePriceFilter] = useState("all");
+  const search = useSearch({ strict: false }) as { vibe?: string; price_range?: string };
+  const navigate = useNavigate({ from: '/' });
+
+  const activeVibeFilter = search.vibe || "all";
+  const activePriceFilter = search.price_range || "all";
+
+  const setActiveVibeFilter = (vibe: string) => {
+    navigate({
+      search: (prev: Record<string, unknown>) => ({
+        ...prev,
+        vibe: vibe !== "all" ? vibe : undefined,
+      }),
+      replace: true,
+    });
+  };
+
+  const setActivePriceFilter = (price: string) => {
+    navigate({
+      search: (prev: Record<string, unknown>) => ({
+        ...prev,
+        price_range: price !== "all" ? price : undefined,
+      }),
+      replace: true,
+    });
+  };
 
   const [mobileNav, setMobileNav] = useState(false);
 
@@ -297,19 +321,27 @@ export default function Home() {
 
           {/* MapLibre Map Container */}
           <div className="mt-4">
-            <MapLibreMap
-              venues={venuesData}
-              selectedVenue={selectedFeature}
-              onSelectVenue={(venue) => {
-                setSelectedFeature(venue);
-                if (venue) {
-                  const idx = carouselVenues.findIndex(
-                    (f) => f.properties.id === venue.properties.id
-                  );
-                  if (idx !== -1) setCarouselIndex(idx);
-                }
-              }}
-            />
+            <Suspense
+              fallback={
+                <div className="h-[400px] w-full rounded-2xl bg-neutral-900/60 border border-amber-900/20 flex items-center justify-center text-amber-200/50 animate-pulse">
+                  <span className="text-sm font-medium">Loading interactive Cairo map...</span>
+                </div>
+              }
+            >
+              <MapLibreMap
+                venues={venuesData}
+                selectedVenue={selectedFeature}
+                onSelectVenue={(venue) => {
+                  setSelectedFeature(venue);
+                  if (venue) {
+                    const idx = carouselVenues.findIndex(
+                      (f) => f.properties.id === venue.properties.id
+                    );
+                    if (idx !== -1) setCarouselIndex(idx);
+                  }
+                }}
+              />
+            </Suspense>
           </div>
         </div>
       </section>

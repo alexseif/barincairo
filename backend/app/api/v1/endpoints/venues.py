@@ -1,5 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException, Query, status
-from geoalchemy2.functions import ST_X, ST_Y
+from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
+from geoalchemy2.functions import ST_MakeEnvelope, ST_Within, ST_X, ST_Y
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -20,8 +20,10 @@ router = APIRouter()
 
 @router.get("/categories", response_model=list[CategoryResponse])
 async def list_categories(
+    response: Response,
     session: AsyncSession = Depends(get_async_session),
 ) -> list[CategoryResponse]:
+    response.headers["Cache-Control"] = "public, max-age=3600, s-maxage=3600"
     result = await session.execute(select(Category).order_by(Category.name))
     categories = result.scalars().all()
     return [CategoryResponse.model_validate(c) for c in categories]
@@ -29,8 +31,10 @@ async def list_categories(
 
 @router.get("/vibes", response_model=list[VibeTagResponse])
 async def list_vibes(
+    response: Response,
     session: AsyncSession = Depends(get_async_session),
 ) -> list[VibeTagResponse]:
+    response.headers["Cache-Control"] = "public, max-age=3600, s-maxage=3600"
     result = await session.execute(select(VibeTag).order_by(VibeTag.name))
     vibes = result.scalars().all()
     return [VibeTagResponse.model_validate(v) for v in vibes]
@@ -49,6 +53,24 @@ async def list_venues_geojson(
         .options(selectinload(Venue.category), selectinload(Venue.vibes))
         .where(Venue.is_active.is_(True))
     )
+
+    if bbox:
+        try:
+            coords = [float(c.strip()) for c in bbox.split(",")]
+            if len(coords) != 4:
+                raise ValueError
+            min_lng, min_lat, max_lng, max_lat = coords
+            stmt = stmt.where(
+                ST_Within(
+                    Venue.location,
+                    ST_MakeEnvelope(min_lng, min_lat, max_lng, max_lat, 4326),
+                )
+            )
+        except ValueError:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid bbox format. Expected 'min_lng,min_lat,max_lng,max_lat'",
+            )
 
     if category:
         stmt = stmt.join(Venue.category).where(Category.slug == category)
