@@ -2,9 +2,9 @@ name: CI/CD Pipeline - barincairo.com
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   lint-and-build:
@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install Dependencies
         run: npm ci
@@ -41,8 +41,10 @@ jobs:
           username: ${{ secrets.HOST_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            set -e
             cd /var/www/barincairo.com
-            git pull origin main
-            docker compose down --remove-orphans
-            docker compose up -d --build
-            docker system prune -f
+            git fetch origin main
+            git reset --hard origin/main
+            docker compose up -d --build --remove-orphans
+            docker compose exec -T api alembic upgrade head
+            docker image prune -f
