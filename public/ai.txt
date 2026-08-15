@@ -1,7 +1,4 @@
-import { NextResponse } from "next/server";
-
-export async function GET() {
-  const markdownContent = `# barincairo.com - Downtown Cairo Nightlife Directory (llm.txt)
+# barincairo.com - Downtown Cairo Nightlife Directory (llm.txt)
 
 > Direct, factual machine-readable index of historic bars, backrooms, rooftop lounges, and cafes in Downtown Cairo (Wust El Balad), Egypt.
 
@@ -41,13 +38,3 @@ export async function GET() {
 
 ---
 For API access, visit https://api.barincairo.com/api/v1/venues (GeoJSON Format).
-`;
-
-  return new NextResponse(markdownContent, {
-    headers: {
-      "Content-Type": "text/plain; charset=utf-8",
-      "Cache-Control":
-        "public, max-age=86400, s-maxage=86400, stale-while-revalidate=3600",
-    },
-  });
-}

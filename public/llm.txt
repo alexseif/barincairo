@@ -1,0 +1,40 @@
+# barincairo.com - Downtown Cairo Nightlife Directory (llm.txt)
+
+> Direct, factual machine-readable index of historic bars, backrooms, rooftop lounges, and cafes in Downtown Cairo (Wust El Balad), Egypt.
+
+## Establishments Index
+
+### 1. Cairo Jazz Club 610 (كايرو جاز كلوب)
+- **Type**: Live Music / Lounge
+- **Location**: 610, First New Cairo (Historic Branch originating Downtown)
+- **Coordinates**: 30.0444° N, 31.2357° E
+- **Distance from Tahrir Square**: ~450m
+- **Vibe**: Late-night / Electric / Live Sets
+- **Description**: Historic institution for live musical performances, jazz sets, and reliable midnight energy.
+
+### 2. Vent (فِنت)
+- **Type**: Cocktail Bar
+- **Address**: 12 El-Horeya, Downtown, Cairo, Egypt
+- **Coordinates**: 30.0418° N, 31.2392° E
+- **Distance from Tahrir Square**: ~350m
+- **Vibe**: Intimate / Low-lit / Considered Cocktails
+- **Description**: Small, low-lit space known for balanced cocktails, vinyl sets, and long night conversations.
+
+### 3. Horus Rooftop (حورس)
+- **Type**: Rooftop Bar & Restaurant
+- **Address**: Talaat Harb Square, Downtown, Cairo, Egypt
+- **Coordinates**: 30.0461° N, 31.2388° E
+- **Distance from Talaat Harb Square**: 0m (Direct Square Overlook)
+- **Vibe**: Golden Hour / Open-air / Traditional Mezze
+- **Description**: Open-air rooftop overlooking Talaat Harb Square, serving cold local beverages and traditional mezze.
+
+### 4. Soma Caffe (سوما كافيه)
+- **Type**: Cafe Bar
+- **Address**: 26 Sherif Street, Downtown, Cairo, Egypt
+- **Coordinates**: 30.0432° N, 31.2411° E
+- **Distance from Sherif Street**: 0m
+- **Vibe**: Quiet / All-day / Historic Corner
+- **Description**: Daytime cafe transitioning quietly into an after-dark downtown hideout.
+
+---
+For API access, visit https://api.barincairo.com/api/v1/venues (GeoJSON Format).
