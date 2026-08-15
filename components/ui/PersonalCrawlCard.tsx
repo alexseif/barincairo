@@ -1,42 +1,48 @@
-import React from 'react'
-import { MessageCircle, Mail, ArrowUpRight } from 'lucide-react'
-import { CONTACT_CONFIG } from '@/lib/config'
+import React from "react";
+import { MessageCircle, Mail, ArrowUpRight } from "lucide-react";
+import { CONTACT_CONFIG } from "@/lib/config";
 
 export interface PersonalCrawlCardProps {
-  whatsappNumber: string
-  contactEmail: string
-  className?: string
+  whatsappNumber: string;
+  contactEmail: string;
+  className?: string;
 }
 
 export default function PersonalCrawlCard({
   whatsappNumber,
   contactEmail,
-  className = '',
+  className = "",
 }: PersonalCrawlCardProps) {
-  const cleanPhone = whatsappNumber.replace(/[^0-9]/g, '')
+  const cleanPhone = whatsappNumber.replace(/[^0-9]/g, "");
   const waUrl = cleanPhone
     ? `https://wa.me/${cleanPhone}?text=${encodeURIComponent(CONTACT_CONFIG.DEFAULT_WA_MESSAGE)}`
-    : `https://wa.me/?text=${encodeURIComponent(CONTACT_CONFIG.DEFAULT_WA_MESSAGE)}`
+    : `https://wa.me/?text=${encodeURIComponent(CONTACT_CONFIG.DEFAULT_WA_MESSAGE)}`;
 
-  const mailtoUrl = `mailto:${encodeURIComponent(contactEmail)}?subject=${encodeURIComponent('Curated Cairo Bar Hop')}`
+  const mailtoUrl = `mailto:${encodeURIComponent(contactEmail)}?subject=${encodeURIComponent("Curated Cairo Bar Hop")}`;
 
   return (
     <div className={`flex flex-col gap-16 ${className}`}>
       {/* Section 1: WhatsApp Dispatch Direct Contact */}
-      <section id="subscribe" className="grid gap-10 border-t border-primary/25 pt-12 lg:grid-cols-[0.7fr_1.3fr]">
+      <section
+        id="subscribe"
+        className="grid gap-10 border-t border-primary/25 pt-12 lg:grid-cols-[0.7fr_1.3fr]"
+      >
         <div>
           <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
             WhatsApp Dispatch
           </p>
           <h2 className="font-serif text-5xl leading-[0.9] tracking-[-0.06em] text-primary lg:text-6xl">
-            Know where<br />
+            Know where
+            <br />
             <em className="font-normal">to go next.</em>
           </h2>
         </div>
 
         <div className="flex max-w-xl flex-col justify-between gap-8 lg:justify-self-end">
           <p className="font-serif text-xl leading-relaxed text-primary/80">
-            We’re currently building curated bar hop experiences. For now, reach out directly to us on WhatsApp or Email to plan a personal, tailored crawl for your evening!
+            We’re currently building curated bar hop experiences. For now, reach out
+            directly to us on WhatsApp or Email to plan a personal, tailored crawl for
+            your evening!
           </p>
 
           <div className="flex flex-wrap items-center gap-4">
@@ -69,7 +75,8 @@ export default function PersonalCrawlCard({
             Bar Crawl Guidelines
           </p>
           <h2 className="font-serif text-5xl leading-[0.9] tracking-[-0.06em] text-primary lg:text-6xl">
-            Ground rules<br />
+            Ground rules
+            <br />
             <em className="font-normal">for the night.</em>
           </h2>
         </div>
@@ -81,9 +88,12 @@ export default function PersonalCrawlCard({
                 01
               </span>
               <div>
-                <strong className="font-semibold text-primary">Intimate Groups (Max 6–8 people):</strong>
+                <strong className="font-semibold text-primary">
+                  Intimate Groups (Max 6–8 people):
+                </strong>
                 <p className="mt-1 text-primary/80 text-lg">
-                  Downtown Cairo’s historic bars and backroom bistros have limited seating. Keeping groups small ensures everyone gets a cozy table.
+                  Downtown Cairo’s historic bars and backroom bistros have limited
+                  seating. Keeping groups small ensures everyone gets a cozy table.
                 </p>
               </div>
             </li>
@@ -92,9 +102,13 @@ export default function PersonalCrawlCard({
                 02
               </span>
               <div>
-                <strong className="font-semibold text-primary">Experience Over Drinking:</strong>
+                <strong className="font-semibold text-primary">
+                  Experience Over Drinking:
+                </strong>
                 <p className="mt-1 text-primary/80 text-lg">
-                  You don’t have to finish every beer and you don’t have to drink alcohol—this walk is about heritage, architecture, atmosphere, and good company.
+                  You don’t have to finish every beer and you don’t have to drink
+                  alcohol—this walk is about heritage, architecture, atmosphere, and good
+                  company.
                 </p>
               </div>
             </li>
@@ -105,7 +119,8 @@ export default function PersonalCrawlCard({
               <div>
                 <strong className="font-semibold text-primary">Local Respect:</strong>
                 <p className="mt-1 text-primary/80 text-lg">
-                  We honor local venue staff, historic atmosphere, and neighborhood character as welcoming guests in Downtown Cairo.
+                  We honor local venue staff, historic atmosphere, and neighborhood
+                  character as welcoming guests in Downtown Cairo.
                 </p>
               </div>
             </li>
@@ -113,5 +128,5 @@ export default function PersonalCrawlCard({
         </div>
       </section>
     </div>
-  )
+  );
 }

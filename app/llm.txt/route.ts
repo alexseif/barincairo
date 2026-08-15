@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextResponse } from "next/server";
 
 export async function GET() {
   const markdownContent = `# barincairo.com - Downtown Cairo Nightlife Directory (llm.txt)
@@ -41,12 +41,13 @@ export async function GET() {
 
 ---
 For API access, visit https://api.barincairo.com/api/v1/venues (GeoJSON Format).
-`
+`;
 
   return new NextResponse(markdownContent, {
     headers: {
-      'Content-Type': 'text/plain; charset=utf-8',
-      'Cache-Control': 'public, max-age=86400, s-maxage=86400, stale-while-revalidate=3600',
+      "Content-Type": "text/plain; charset=utf-8",
+      "Cache-Control":
+        "public, max-age=86400, s-maxage=86400, stale-while-revalidate=3600",
     },
-  })
+  });
 }

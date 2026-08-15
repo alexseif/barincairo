@@ -1,16 +1,16 @@
-'use client'
+"use client";
 
-import { ArrowUpRight, MapPin, Tag, X } from 'lucide-react'
-import type { GeoJSONFeature } from '@/lib/api'
+import { ArrowUpRight, MapPin, Tag, X } from "lucide-react";
+import type { GeoJSONFeature } from "@/lib/api";
 
 interface VenueTooltipCardProps {
-  venue: GeoJSONFeature
-  onClose: () => void
+  venue: GeoJSONFeature;
+  onClose: () => void;
 }
 
 export default function VenueTooltipCard({ venue, onClose }: VenueTooltipCardProps) {
-  const p = venue.properties
-  const [lng, lat] = venue.geometry.coordinates
+  const p = venue.properties;
+  const [lng, lat] = venue.geometry.coordinates;
 
   return (
     <div className="absolute bottom-4 left-4 right-4 z-30 max-w-md border-2 border-[#24332d] bg-[#ede7d8] p-5 shadow-[4px_4px_0px_#24332d] sm:bottom-6 sm:left-auto sm:right-6 sm:w-96">
@@ -18,7 +18,7 @@ export default function VenueTooltipCard({ venue, onClose }: VenueTooltipCardPro
       <div className="mb-3 flex items-start justify-between border-b border-[#24332d]/20 pb-2">
         <div>
           <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-[#ad793b]">
-            {p.category_name || 'Historic Venue'}
+            {p.category_name || "Historic Venue"}
           </span>
           <h3 className="font-serif text-xl font-bold tracking-tight text-[#24332d]">
             {p.name_en}
@@ -61,7 +61,7 @@ export default function VenueTooltipCard({ venue, onClose }: VenueTooltipCardPro
               className="flex items-center gap-1 border border-[#24332d]/20 px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-[#24332d]/80"
             >
               <Tag className="size-2.5 text-[#ad793b]" />
-              {vibe.replace('-', ' ')}
+              {vibe.replace("-", " ")}
             </span>
           ))}
       </div>
@@ -82,5 +82,5 @@ export default function VenueTooltipCard({ venue, onClose }: VenueTooltipCardPro
         </span>
       </div>
     </div>
-  )
+  );
 }
