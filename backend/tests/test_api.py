@@ -35,6 +35,22 @@ async def test_subscriber_creation_validation():
         bad_res = await client.post("/api/v1/subscribers", json={"whatsapp_number": "123"})
         assert bad_res.status_code == 422
 
+        # Invalid payload (no email and no whatsapp)
+        no_contact_res = await client.post("/api/v1/subscribers", json={"name": "Alex"})
+        assert no_contact_res.status_code == 422
+
+        # Valid payload (email only)
+        email_res = await client.post("/api/v1/subscribers", json={"name": "Alex", "email": "alex@example.com"})
+        assert email_res.status_code == 201
+        data = email_res.json()
+        assert data["email"] == "alex@example.com"
+        assert data["name"] == "Alex"
+
+        # Valid payload (whatsapp only)
+        wa_res = await client.post("/api/v1/subscribers", json={"whatsapp_number": "+201001234567"})
+        assert wa_res.status_code == 201
+        assert wa_res.json()["whatsapp_number"] == "+201001234567"
+
 
 @pytest.mark.asyncio
 async def test_categories_cache_control_header():

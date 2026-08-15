@@ -219,3 +219,23 @@ async def test_admin_venue_staging_crud():
             await session.execute(delete(VenueStaging).where(VenueStaging.place_id == test_place_id))
             await session.commit()
         await client.aclose()
+
+
+@pytest.mark.asyncio
+async def test_admin_scraper_view_get_and_post():
+    """Test SQLAdmin BaseView scraper menu endpoint GET form and POST extraction."""
+    client = await get_authenticated_client()
+    try:
+        res_get = await client.get("/admin/scrape")
+        assert res_get.status_code == 200
+        assert "Scrape Venues" in res_get.text or "Target Area" in res_get.text or "Extract" in res_get.text
+
+        res_post = await client.post(
+            "/admin/scrape",
+            data={"location": "downtown", "qty": "5"},
+            follow_redirects=True,
+        )
+        assert res_post.status_code == 200
+    finally:
+        await client.aclose()
+

@@ -704,6 +704,48 @@
         }
       }
     },
+    "/api/v1/admin/scrape": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Trigger Admin Scrape",
+        "description": "Phase 1 Admin Trigger: Scrape and stage lightweight venues for a specified location/district.",
+        "operationId": "trigger_admin_scrape_api_v1_admin_scrape_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScrapeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScrapeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "summary": "Health Check",
@@ -929,14 +971,97 @@
         "type": "object",
         "title": "HTTPValidationError"
       },
+      "ScrapeRequest": {
+        "properties": {
+          "location": {
+            "type": "string",
+            "title": "Location",
+            "description": "Target location or district name (e.g. heliopolis, downtown, maadi)",
+            "default": "downtown"
+          },
+          "qty": {
+            "type": "integer",
+            "maximum": 50.0,
+            "minimum": 1.0,
+            "title": "Qty",
+            "description": "Maximum number of new un-staged venues to extract",
+            "default": 10
+          }
+        },
+        "type": "object",
+        "title": "ScrapeRequest"
+      },
+      "ScrapeResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "location": {
+            "type": "string",
+            "title": "Location"
+          },
+          "requested_qty": {
+            "type": "integer",
+            "title": "Requested Qty"
+          },
+          "staged_count": {
+            "type": "integer",
+            "title": "Staged Count"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "location",
+          "requested_qty",
+          "staged_count",
+          "message"
+        ],
+        "title": "ScrapeResponse"
+      },
       "SubscriberCreate": {
         "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
           "whatsapp_number": {
-            "type": "string",
-            "maxLength": 30,
-            "minLength": 8,
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 30
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Whatsapp Number",
             "description": "International phone format e.g. +201000000000"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
           },
           "source": {
             "anyOf": [
@@ -952,9 +1077,6 @@
           }
         },
         "type": "object",
-        "required": [
-          "whatsapp_number"
-        ],
         "title": "SubscriberCreate"
       },
       "SubscriberResponse": {
@@ -963,9 +1085,38 @@
             "type": "integer",
             "title": "Id"
           },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
           "whatsapp_number": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Whatsapp Number"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
           },
           "source": {
             "anyOf": [
@@ -987,8 +1138,6 @@
         "type": "object",
         "required": [
           "id",
-          "whatsapp_number",
-          "source",
           "created_at"
         ],
         "title": "SubscriberResponse"

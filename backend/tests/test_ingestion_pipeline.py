@@ -57,9 +57,9 @@ def test_two_citation_gate_validation():
 async def test_end_to_end_ingestion_pipeline():
     bbox = (30.0380, 31.2300, 30.0520, 31.2480)
 
-    # 1. Extraction Phase
-    records = await extract_and_stage_venues(bbox=bbox, dry_run=False, fixtures_only=True)
-    assert len(records) >= 0  # May be 0 if already staged from previous runs
+    # 1. Extraction Phase without valid key should raise ValueError
+    with pytest.raises(ValueError):
+        await extract_and_stage_venues(bbox=bbox, dry_run=False, fixtures_only=True)
 
     async with AsyncSessionLocal() as session:
         # Create a unique test venue staging record for testing enrichment & promotion
@@ -122,3 +122,41 @@ async def test_end_to_end_ingestion_pipeline():
         photo_res = await session.execute(select(VenuePhoto).where(VenuePhoto.venue_id == prod_venue.id))
         photos = photo_res.scalars().all()
         assert len(photos) >= 1
+
+
+@pytest.mark.asyncio
+async def test_phase1_extraction_by_district_and_qty():
+    with pytest.raises(ValueError):
+        await extract_and_stage_venues(location="heliopolis", qty=2, dry_run=True)
+
+
+@pytest.mark.asyncio
+async def test_phase2_process_and_publish_approved():
+    test_place_id = "ChIJ_approved_publish_test_777"
+    async with AsyncSessionLocal() as session:
+        existing = (await session.execute(select(VenueStaging).where(VenueStaging.place_id == test_place_id))).scalar_one_or_none()
+        if existing:
+            await session.delete(existing)
+            await session.commit()
+
+        staging = VenueStaging(
+            place_id=test_place_id,
+            google_maps_url="https://maps.google.com/?q=place_id:ChIJ_approved_publish_test_777",
+            name_raw="Approved Test Pub",
+            address_raw="12 Champollion St, Downtown, Cairo",
+            location=WKTElement("POINT(31.2385 30.0450)", srid=4326),
+            raw_payload={"price_level": "$$", "rating": 4.5},
+            status="APPROVED",
+        )
+        session.add(staging)
+        await session.commit()
+
+    from app.cli import process_and_publish_approved
+    await process_and_publish_approved(pks=None)
+
+    async with AsyncSessionLocal() as session:
+        staged_res = await session.execute(select(VenueStaging).where(VenueStaging.place_id == test_place_id))
+        staged_venue = staged_res.scalar_one_or_none()
+        assert staged_venue is not None
+        assert staged_venue.status == "PUBLISHED"
+

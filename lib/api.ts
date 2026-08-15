@@ -96,6 +96,28 @@ export async function fetchVenuesGeoJSON(params?: {
   }
 }
 
+export interface SubscribePayload {
+  name?: string
+  whatsapp_number?: string
+  email?: string
+  source?: string
+}
+
+export async function subscribeUser(payload: SubscribePayload): Promise<boolean> {
+  try {
+    const baseUrl = getApiBaseUrl()
+    const url = new URL('/api/v1/subscribers', baseUrl.startsWith('http') ? baseUrl : window.location.origin)
+    const res = await fetch(url.toString(), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...payload, source: payload.source || 'website' }),
+    })
+    return res.ok
+  } catch {
+    return false
+  }
+}
+
 export async function subscribeWhatsApp(whatsapp_number: string): Promise<boolean> {
   try {
     const baseUrl = getApiBaseUrl()

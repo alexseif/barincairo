@@ -26,6 +26,7 @@ import {
   type GeoJSONFeatureCollection,
 } from "@/lib/api";
 import PersonalCrawlCard from "@/components/ui/PersonalCrawlCard";
+import ComingSoonModal from "@/components/ui/ComingSoonModal";
 import { CONTACT_CONFIG } from "@/lib/config";
 
 import { useVenuesQuery } from "@/lib/hooks";
@@ -550,6 +551,7 @@ export default function Home() {
           </a>
         </div>
       </footer>
+      <ComingSoonModal />
     </main>
   );
 }

@@ -14,16 +14,34 @@ async def create_subscriber(
     payload: SubscriberCreate,
     session: AsyncSession = Depends(get_async_session),
 ) -> SubscriberResponse:
-    # Check if number already registered
-    result = await session.execute(
-        select(Subscriber).where(Subscriber.whatsapp_number == payload.whatsapp_number)
-    )
-    existing = result.scalar_one_or_none()
+    existing = None
+    wa = payload.whatsapp_number.strip() if payload.whatsapp_number else None
+    em = payload.email.strip() if payload.email else None
+    name = payload.name.strip() if payload.name else None
+
+    if em:
+        result = await session.execute(select(Subscriber).where(Subscriber.email == em))
+        existing = result.scalar_one_or_none()
+
+    if not existing and wa:
+        result = await session.execute(select(Subscriber).where(Subscriber.whatsapp_number == wa))
+        existing = result.scalar_one_or_none()
+
     if existing:
+        if name and not existing.name:
+            existing.name = name
+        if wa and not existing.whatsapp_number:
+            existing.whatsapp_number = wa
+        if em and not existing.email:
+            existing.email = em
+        await session.commit()
+        await session.refresh(existing)
         return SubscriberResponse.model_validate(existing)
 
     subscriber = Subscriber(
-        whatsapp_number=payload.whatsapp_number,
+        name=name,
+        whatsapp_number=wa,
+        email=em,
         source=payload.source or "website",
     )
     session.add(subscriber)
