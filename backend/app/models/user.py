@@ -1,16 +1,8 @@
-from datetime import datetime, timezone
-
 from fastapi_users.db import SQLAlchemyBaseUserTableUUID
-from sqlalchemy import DateTime
-from sqlalchemy.orm import Mapped, mapped_column
 
-from app.models.venues import Base
+from app.models.base import Base, TimestampMixin
 
 
-class User(SQLAlchemyBaseUserTableUUID, Base):
+class User(SQLAlchemyBaseUserTableUUID, TimestampMixin, Base):
     __tablename__ = "users"
-
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False
-    )
 

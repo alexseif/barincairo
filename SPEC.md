@@ -175,12 +175,15 @@ class Venue(Base):
         "id": 1,
         "slug": "cap-d-or",
         "name": "Cap D'Or",
+        "description": "High-ceilinged 1930s Greek-Egyptian institution...",
         "address": "Abdel Khalek Sarwat St, Downtown Cairo",
-        "price_range": "$$",
         "working_hours": "5:00 PM - 3:00 AM",
-        "vibe_tags": ["old-times", "ambient-music"],
-        "hero_image": "/images/venues/cap-d-or.webp",
-        "detail_url": "/venues/cap-d-or"
+        "price_range": "$$",
+        "vibe_description": "High ceilings, cold Stella, 1930s Greek-Egyptian atmosphere",
+        "photo_url": "/images/venues/cap-d-or.webp",
+        "category_slug": "historic-pub",
+        "category_name": "Historic Pub",
+        "vibes": ["old-times", "ambient-music"]
       }
     }
   ]
@@ -198,15 +201,15 @@ class Venue(Base):
 
 ---
 
-## 7. Frontend Migration & Refinement Specification (Vite SPA)
+## 7. Frontend Specification (Next.js 15 App Router)
 
 ### 7.1 Framework & TDD Engine
-* **Build Tooling**: Vite 6 + `@vitejs/plugin-react` + Vitest + `@testing-library/react`.
-* **Application Shell**: `index.html` entrypoint mounting React SPA root in `src/main.tsx` and `src/App.tsx`.
+* **Build Tooling**: Next.js 15 (App Router) + React 19 + Vitest + `@testing-library/react`.
+* **Application Shell**: Next.js App Router entrypoint mounting root layout and page in `app/layout.tsx` and `app/page.tsx`.
 
 ### 7.2 Data Contract & Python API Stream
 * **Schema Alignment**: Frontend `VenueProperties` strictly aligned with FastAPI Pydantic schema (`name`, `description`, `address`, `working_hours`, `vibe_description`, `price_range`, `category_slug`, `category_name`, `vibes`).
-* **Zero Hardcoded Overrides**: Complete removal of static `FALLBACK_VENUES` fallbacks. Map strictly displays feature array delivered by `GET /api/v1/venues`.
+* **Graceful Degradation Fallbacks**: Dynamic PostGIS feature array fetched via `GET /api/v1/venues`, falling back gracefully to static `FALLBACK_VENUES` in `lib/api.ts` if the backend API service is unreachable.
 
 ### 7.3 Typography & Design Scale (`rem`)
 * **Site Title**: `2rem` (`text-[2rem]`)

@@ -1,17 +1,16 @@
 import uuid
-from datetime import datetime, timezone
 
 from geoalchemy2 import Geometry
 from geoalchemy2.elements import WKTElement
 from geoalchemy2.shape import to_shape
-from sqlalchemy import DateTime, String, Text
+from sqlalchemy import String, Text
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.models.venues import Base
+from app.models.base import Base, TimestampMixin
 
 
-class VenueStaging(Base):
+class VenueStaging(TimestampMixin, Base):
     __tablename__ = "venue_staging"
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -27,15 +26,6 @@ class VenueStaging(Base):
     raw_payload: Mapped[dict] = mapped_column(JSONB, nullable=False)
     enriched_payload: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
     status: Mapped[str] = mapped_column(String(50), default="PENDING_CURATION", index=True, nullable=False)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False
-    )
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        default=lambda: datetime.now(timezone.utc),
-        onupdate=lambda: datetime.now(timezone.utc),
-        nullable=False,
-    )
 
     @property
     def latitude(self) -> float | None:

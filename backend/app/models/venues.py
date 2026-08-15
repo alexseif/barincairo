@@ -1,23 +1,18 @@
-from datetime import datetime, timezone
-
 from geoalchemy2 import Geometry
 from geoalchemy2.elements import WKTElement
 from geoalchemy2.shape import to_shape
 from sqlalchemy import (
     Boolean,
     Column,
-    DateTime,
     ForeignKey,
     Integer,
     String,
     Table,
     Text,
 )
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-
-class Base(DeclarativeBase):
-    pass
+from app.models.base import Base, TimestampMixin
 
 
 # Many-to-Many Junction Table for Venues and Vibe Tags
@@ -29,7 +24,7 @@ venue_vibes = Table(
 )
 
 
-class Category(Base):
+class Category(TimestampMixin, Base):
     __tablename__ = "categories"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
@@ -42,7 +37,7 @@ class Category(Base):
         return f"<Category {self.slug}>"
 
 
-class VibeTag(Base):
+class VibeTag(TimestampMixin, Base):
     __tablename__ = "vibe_tags"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
@@ -55,11 +50,11 @@ class VibeTag(Base):
         return f"<VibeTag {self.slug}>"
 
 
-class Venue(Base):
+class Venue(TimestampMixin, Base):
     __tablename__ = "venues"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
-    category_id: Mapped[int] = mapped_column(Integer, ForeignKey("categories.id"), nullable=False)
+    category_id: Mapped[int] = mapped_column(Integer, ForeignKey("categories.id"), index=True, nullable=False)
     slug: Mapped[str] = mapped_column(String(100), unique=True, index=True, nullable=False)
     name: Mapped[str] = mapped_column(String(150), nullable=False)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
@@ -74,9 +69,6 @@ class Venue(Base):
     vibe_description: Mapped[str | None] = mapped_column(String(255), nullable=True)
     photo_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False
-    )
 
     category: Mapped["Category"] = relationship("Category", back_populates="venues")
     vibes: Mapped[list["VibeTag"]] = relationship("VibeTag", secondary=venue_vibes, back_populates="venues")
@@ -120,11 +112,11 @@ class Venue(Base):
         return f"<Venue {self.slug}>"
 
 
-class VenuePhoto(Base):
+class VenuePhoto(TimestampMixin, Base):
     __tablename__ = "venue_photos"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
-    venue_id: Mapped[int] = mapped_column(Integer, ForeignKey("venues.id", ondelete="CASCADE"), nullable=False)
+    venue_id: Mapped[int] = mapped_column(Integer, ForeignKey("venues.id", ondelete="CASCADE"), index=True, nullable=False)
     photo_url: Mapped[str] = mapped_column(String(500), nullable=False)
     caption: Mapped[str | None] = mapped_column(String(255), nullable=True)
 

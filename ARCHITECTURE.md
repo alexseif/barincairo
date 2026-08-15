@@ -108,14 +108,16 @@ CREATE INDEX idx_staging_status ON venue_staging(status);
 - **Endpoints**:
   - `GET /api/v1/venues?bbox={xmin},{ymin},{xmax},{ymax}`: Stream GeoJSON vector data.
   - `GET /api/v1/venues/{slug}`: Detailed establishment metadata.
-  - `POST /api/v1/subscribe`: WhatsApp registration.
+  - `GET /api/v1/categories`: List category metadata.
+  - `GET /api/v1/vibes`: List vibe tags.
+  - `POST /api/v1/subscribers`: WhatsApp registration.
   - `GET/POST /admin`: SQLAdmin dashboard & entity management endpoints.
 
 ---
 
 ## 4. Frontend & Cartographic Engine Specification
 
-- **Framework**: Vite 6 + React 19 + TypeScript (Client-Side SPA)
+- **Framework**: Next.js 15 (App Router) + React 19 + TypeScript
 - **Styling**: Tailwind CSS v4 with custom visual theme tokens and `rem` typography scale (`2rem` site title, `0.6875rem` tagline, `0.75rem` menu links).
 - **Cartographic Engine**: WebGL Spatial Renderer (MapLibre GL JS vector tiles).
   * Consumes pure GeoJSON from Python FastAPI (`GET /api/v1/venues`).
@@ -144,7 +146,7 @@ CREATE INDEX idx_staging_status ON venue_staging(status);
 - **Services**:
   - `barincairo_db`: `postgis/postgis:15-3.3-alpine` (Internal port 5432, 512MB RAM cap).
   - `barincairo_api`: Python FastAPI + SQLAdmin (Local port 127.0.0.1:8000).
-  - `barincairo_frontend`: Vite React 19 SPA static bundle / dev server (Local port 127.0.0.1:3000).
+  - `barincairo_frontend`: Next.js 15 App Router bundle / dev server (Local port 127.0.0.1:3000).
 - **Host Reverse Proxy**: Host-level Nginx (`nginx.conf.example`) handles SSL termination via Let's Encrypt and proxies `barincairo.com` to `127.0.0.1:3000` and `api.barincairo.com` to `127.0.0.1:8000`.
 
 ---
