@@ -46,10 +46,18 @@ export interface VibeItem {
   name: string
 }
 
-const API_BASE =
-  (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_API_URL) ||
-  (import.meta.env?.VITE_API_URL as string) ||
-  'http://127.0.0.1:8000'
+export function getApiBaseUrl(): string {
+  if (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL
+  }
+  if (typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL
+  }
+  if (typeof window !== 'undefined' && window.location?.origin) {
+    return window.location.origin
+  }
+  return 'http://127.0.0.1:8000'
+}
 
 export function getVenueName(props?: VenueProperties | null): string {
   if (!props) return ''
@@ -72,7 +80,8 @@ export async function fetchVenuesGeoJSON(params?: {
   vibe?: string
 }): Promise<GeoJSONFeatureCollection> {
   try {
-    const url = new URL(`${API_BASE}/api/v1/venues`)
+    const baseUrl = getApiBaseUrl()
+    const url = new URL('/api/v1/venues', baseUrl.startsWith('http') ? baseUrl : window.location.origin)
     if (params?.category) url.searchParams.set('category', params.category)
     if (params?.price_range) url.searchParams.set('price_range', params.price_range)
     if (params?.vibe) url.searchParams.set('vibe', params.vibe)
@@ -89,7 +98,9 @@ export async function fetchVenuesGeoJSON(params?: {
 
 export async function subscribeWhatsApp(whatsapp_number: string): Promise<boolean> {
   try {
-    const res = await fetch(`${API_BASE}/api/v1/subscribers`, {
+    const baseUrl = getApiBaseUrl()
+    const url = new URL('/api/v1/subscribers', baseUrl.startsWith('http') ? baseUrl : window.location.origin)
+    const res = await fetch(url.toString(), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ whatsapp_number, source: 'website' }),

@@ -84,7 +84,7 @@ export default function Home() {
   // Selected Carousel Features (Top 3 venues or filtered features)
   const carouselVenues = venuesData.features.slice(0, 3);
   const activeCarouselFeature =
-    carouselVenues[carouselIndex] || selectedFeature || venuesData.features[0] || null;
+    selectedFeature || carouselVenues[carouselIndex] || venuesData.features[0] || null;
   const selectedProps = activeCarouselFeature?.properties;
 
   const handlePrevCarousel = () => {
