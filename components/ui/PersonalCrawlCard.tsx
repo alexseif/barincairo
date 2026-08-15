@@ -87,7 +87,7 @@ export default function PersonalCrawlCard({
 
         <div className="max-w-xl lg:justify-self-end">
           <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 font-serif leading-relaxed text-primary/90">
-            <li className="flex items-start gap-4 border border-primary/15 bg-card/40 p-4">
+            <li className="flex items-start gap-4 p-4">
               <span className="flex size-8 shrink-0 items-center justify-center border border-accent/40 bg-accent/10 font-mono text-[0.75rem] font-bold text-accent">
                 01
               </span>
@@ -101,7 +101,7 @@ export default function PersonalCrawlCard({
                 </p>
               </div>
             </li>
-            <li className="flex items-start gap-4 border border-primary/15 bg-card/40 p-4">
+            <li className="flex items-start gap-4 p-4">
               <span className="flex size-8 shrink-0 items-center justify-center border border-accent/40 bg-accent/10 font-mono text-[0.75rem] font-bold text-accent">
                 02
               </span>
@@ -115,7 +115,7 @@ export default function PersonalCrawlCard({
                 </p>
               </div>
             </li>
-            <li className="flex items-start gap-4 border border-primary/15 bg-card/40 p-4">
+            <li className="flex items-start gap-4 p-4">
               <span className="flex size-8 shrink-0 items-center justify-center border border-accent/40 bg-accent/10 font-mono text-[0.75rem] font-bold text-accent">
                 03
               </span>
@@ -127,7 +127,7 @@ export default function PersonalCrawlCard({
                 </p>
               </div>
             </li>
-            <li className="flex items-start gap-4 border border-primary/15 bg-card/40 p-4">
+            <li className="flex items-start gap-4 p-4">
               <span className="flex size-8 shrink-0 items-center justify-center border border-accent/40 bg-accent/10 font-mono text-[0.75rem] font-bold text-accent">
                 04
               </span>
