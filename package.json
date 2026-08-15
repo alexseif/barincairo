@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "npm run sync-schema && tsc && vite build",
     "preview": "vite preview",
+    "sync-schema": "PYTHONPATH=backend backend/venv/bin/python backend/scripts/export_openapi.py > openapi.json",
     "lint": "eslint .",
-    "test": "vitest run"
+    "test": "npm run sync-schema && vitest run"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
