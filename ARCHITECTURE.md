@@ -117,12 +117,18 @@ CREATE INDEX idx_staging_status ON venue_staging(status);
 
 ## 4. Frontend & Cartographic Engine Specification
 
-- **Framework**: Next.js 15 (App Router) + React 19 + TypeScript
-- **Styling**: Tailwind CSS v4 with custom visual theme tokens and `rem` typography scale (`2rem` site title, `0.6875rem` tagline, `0.75rem` menu links).
+- **Framework**: Vite 8 + React 19 + TypeScript (Client-side Single Page Application)
+- **Styling**: Tailwind CSS v4 with custom visual theme tokens and strict `rem` typography scale:
+  - Site Title: `2rem` (32px)
+  - Site Tagline: `0.6875rem` (11px)
+  - Navigation Menu: `0.75rem` (12px)
+  - Minimum font baseline across ground rules grid and UI cards: `0.75rem` (12px)
+- **Data Integration & Models**: Consumes Python FastAPI backend (`GET /api/v1/venues`) directly as the single source of truth using aligned single-language schemas (`name`, `description`, `address`, `working_hours`, `price_range`, `vibe_description`, `photo_url`, `category_slug`, `category_name`, `vibes`). Hardcoded fallback mock datasets are removed.
 - **Cartographic Engine**: WebGL Spatial Renderer (MapLibre GL JS vector tiles).
-  * Consumes pure GeoJSON from Python FastAPI (`GET /api/v1/venues`).
-  * Mobile viewports feature compact combobox dropdown filters for Price & Vibe and an expanded map height (`min-h-[420px]`).
-  * Custom vector tile styling stripping generic map icons and applying the "Osool" color taxonomy.
+  * Mobile viewports feature compact combobox dropdown filters for Price & Vibe and an expanded map height (`min-h-[480px]`).
+  * Hero section includes an interactive "Wust El Balad" tooltip ("Downtown").
+  * "A good place to start" section features a 3-venue carousel with full-width venue title layout on mobile.
+  * "Ground Rules" section features a 2x2 responsive grid with 4 rules, including "Tip Generously".
 
 ---
 
@@ -142,11 +148,11 @@ CREATE INDEX idx_staging_status ON venue_staging(status);
 ## 6. Infrastructure Isolation & Containerization (Docker)
 
 - **Isolation Strategy**: All components run within an isolated Docker network (`barincairo_net`) managed by `docker-compose.yml`.
-- **Co-location Safety**: Prevents runtime or library conflicts with host-level WordPress and Symfony applications.
+- **Co-location Safety**: Prevents runtime or library conflicts with host-level applications.
 - **Services**:
   - `barincairo_db`: `postgis/postgis:15-3.3-alpine` (Internal port 5432, 512MB RAM cap).
   - `barincairo_api`: Python FastAPI + SQLAdmin (Local port 127.0.0.1:8000).
-  - `barincairo_frontend`: Next.js 15 App Router bundle / dev server (Local port 127.0.0.1:3000).
+  - `barincairo_frontend`: Vite React SPA production bundle / dev server (Local port 127.0.0.1:3000).
 - **Host Reverse Proxy**: Host-level Nginx (`nginx.conf.example`) handles SSL termination via Let's Encrypt and proxies `barincairo.com` to `127.0.0.1:3000` and `api.barincairo.com` to `127.0.0.1:8000`.
 
 ---

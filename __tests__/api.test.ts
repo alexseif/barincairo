@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { fetchVenuesGeoJSON, subscribeWhatsApp, FALLBACK_VENUES } from '@/lib/api'
+import { fetchVenuesGeoJSON, subscribeWhatsApp, getVenueName, getVenueDescription, getVenueAddress } from '@/lib/api'
 
-describe('Frontend API & Fallback Filter Engine', () => {
+describe('Frontend API Engine', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
   })
@@ -10,7 +10,22 @@ describe('Frontend API & Fallback Filter Engine', () => {
     it('returns remote data when API request succeeds', async () => {
       const mockResponse = {
         type: 'FeatureCollection',
-        features: [FALLBACK_VENUES.features[0]],
+        features: [
+          {
+            type: 'Feature',
+            geometry: { type: 'Point', coordinates: [31.2392, 30.0418] },
+            properties: {
+              id: 1,
+              slug: 'cap-d-or-el-horeya',
+              name: "Cap D'Or (El Horeya)",
+              address: '12 El-Horeya Street',
+              price_range: '$',
+              category_slug: 'historic-pub',
+              category_name: 'Historic Pub',
+              vibes: ['old-times'],
+            },
+          },
+        ],
       }
 
       vi.stubGlobal(
@@ -42,39 +57,29 @@ describe('Frontend API & Fallback Filter Engine', () => {
       expect(callUrl).toContain('vibe=fancy')
     })
 
-    it('returns all fallback venues when fetch fails or backend is unreachable', async () => {
+    it('returns empty feature collection when fetch fails or backend is unreachable', async () => {
       vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('Network error')))
 
       const data = await fetchVenuesGeoJSON()
       expect(data.type).toBe('FeatureCollection')
-      expect(data.features.length).toBe(15)
+      expect(data.features.length).toBe(0)
+    })
+  })
+
+  describe('venue property helpers', () => {
+    it('returns single language name or legacy name_en fallback', () => {
+      expect(getVenueName({ id: 1, slug: 'test', name: 'Bar Cairo', address: 'Cairo', price_range: '$', category_slug: 'pub', category_name: 'Pub', vibes: [] })).toBe('Bar Cairo')
+      expect(getVenueName({ id: 1, slug: 'test', name: '', name_en: 'Bar Cairo EN', address: 'Cairo', price_range: '$', category_slug: 'pub', category_name: 'Pub', vibes: [] })).toBe('Bar Cairo EN')
     })
 
-    it('filters fallback venues correctly by price range ($)', async () => {
-      vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('Network error')))
-
-      const data = await fetchVenuesGeoJSON({ price_range: '$' })
-      expect(data.features.length).toBeGreaterThan(0)
-      data.features.forEach((feature) => {
-        expect(feature.properties.price_range).toBe('$')
-      })
+    it('returns single language description or legacy description_en fallback', () => {
+      expect(getVenueDescription({ id: 1, slug: 'test', name: 'Bar', description: 'Cozy spot', address: 'Cairo', price_range: '$', category_slug: 'pub', category_name: 'Pub', vibes: [] })).toBe('Cozy spot')
+      expect(getVenueDescription({ id: 1, slug: 'test', name: 'Bar', description_en: 'Cozy EN', address: 'Cairo', price_range: '$', category_slug: 'pub', category_name: 'Pub', vibes: [] })).toBe('Cozy EN')
     })
 
-    it('filters fallback venues correctly by vibe tag (fancy)', async () => {
-      vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('Network error')))
-
-      const data = await fetchVenuesGeoJSON({ vibe: 'fancy' })
-      expect(data.features.length).toBeGreaterThan(0)
-      data.features.forEach((feature) => {
-        expect(feature.properties.vibes).toContain('fancy')
-      })
-    })
-
-    it('ignores "all" values when filtering fallback venues', async () => {
-      vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('Network error')))
-
-      const data = await fetchVenuesGeoJSON({ price_range: 'all', vibe: 'all' })
-      expect(data.features.length).toBe(15)
+    it('returns single language address or legacy address_en fallback', () => {
+      expect(getVenueAddress({ id: 1, slug: 'test', name: 'Bar', address: 'Downtown', price_range: '$', category_slug: 'pub', category_name: 'Pub', vibes: [] })).toBe('Downtown')
+      expect(getVenueAddress({ id: 1, slug: 'test', name: 'Bar', address: '', address_en: 'Downtown EN', price_range: '$', category_slug: 'pub', category_name: 'Pub', vibes: [] })).toBe('Downtown EN')
     })
   })
 

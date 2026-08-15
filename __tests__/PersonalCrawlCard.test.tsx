@@ -9,7 +9,7 @@ describe('PersonalCrawlCard Component', () => {
     contactEmail: 'hello@barincairo.com',
   }
 
-  it('renders WhatsApp Dispatch 2-column section and Ground Rules section', () => {
+  it('renders WhatsApp Dispatch section and all 4 Ground Rules in a grid', () => {
     render(<PersonalCrawlCard {...defaultProps} />)
 
     expect(
@@ -31,6 +31,7 @@ describe('PersonalCrawlCard Component', () => {
     expect(screen.getByText(/Intimate Groups \(Max 6–8 people\):/i)).toBeInTheDocument()
     expect(screen.getByText(/Experience Over Drinking:/i)).toBeInTheDocument()
     expect(screen.getByText(/Local Respect:/i)).toBeInTheDocument()
+    expect(screen.getByText(/Tip Generously:/i)).toBeInTheDocument()
   })
 
   it('renders WhatsApp CTA link with encoded pre-filled message and target blank', () => {

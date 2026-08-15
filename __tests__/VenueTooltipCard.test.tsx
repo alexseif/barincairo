@@ -9,10 +9,13 @@ const mockVenue: GeoJSONFeature = {
   properties: {
     id: 1,
     slug: 'cap-d-or-el-horeya',
+    name: "Cap D'Or (El Horeya)",
     name_en: "Cap D'Or (El Horeya)",
     name_ar: 'بار الحرية (كاب دور)',
+    description: 'High-ceilinged 1930s Greek-Egyptian institution.',
     description_en: 'High-ceilinged 1930s Greek-Egyptian institution.',
     description_ar: 'بار ومقهى كلاسيكي تاريخي.',
+    address: '12 El-Horeya Street',
     address_en: '12 El-Horeya Street',
     address_ar: '١٢ شارع الحرية',
     price_range: '$',

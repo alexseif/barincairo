@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import {
   ArrowUpRight,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   Clock3,
   Compass,
   MapPin,
@@ -17,7 +19,9 @@ import {
 import MapLibreMap from "@/components/map/MapLibreMap";
 import {
   fetchVenuesGeoJSON,
-  FALLBACK_VENUES,
+  getVenueName,
+  getVenueDescription,
+  getVenueAddress,
   type GeoJSONFeature,
   type GeoJSONFeatureCollection,
 } from "@/lib/api";
@@ -43,8 +47,13 @@ const PRICE_FILTERS = [
 ];
 
 export default function Home() {
-  const [venuesData, setVenuesData] = useState<GeoJSONFeatureCollection>(FALLBACK_VENUES);
+  const [venuesData, setVenuesData] = useState<GeoJSONFeatureCollection>({
+    type: "FeatureCollection",
+    features: [],
+  });
   const [selectedFeature, setSelectedFeature] = useState<GeoJSONFeature | null>(null);
+  const [carouselIndex, setCarouselIndex] = useState(0);
+
   const [activeVibeFilter, setActiveVibeFilter] = useState("all");
   const [activePriceFilter, setActivePriceFilter] = useState("all");
 
@@ -61,8 +70,10 @@ export default function Home() {
       setVenuesData(data);
       if (data.features.length > 0) {
         setSelectedFeature(data.features[0]);
+        setCarouselIndex(0);
       } else {
         setSelectedFeature(null);
+        setCarouselIndex(0);
       }
       setLoading(false);
     }
@@ -70,7 +81,25 @@ export default function Home() {
     loadVenues();
   }, [activeVibeFilter, activePriceFilter]);
 
-  const selectedProps = selectedFeature?.properties;
+  // Selected Carousel Features (Top 3 venues or filtered features)
+  const carouselVenues = venuesData.features.slice(0, 3);
+  const activeCarouselFeature =
+    carouselVenues[carouselIndex] || selectedFeature || venuesData.features[0] || null;
+  const selectedProps = activeCarouselFeature?.properties;
+
+  const handlePrevCarousel = () => {
+    if (carouselVenues.length === 0) return;
+    const nextIdx = (carouselIndex - 1 + carouselVenues.length) % carouselVenues.length;
+    setCarouselIndex(nextIdx);
+    setSelectedFeature(carouselVenues[nextIdx]);
+  };
+
+  const handleNextCarousel = () => {
+    if (carouselVenues.length === 0) return;
+    const nextIdx = (carouselIndex + 1) % carouselVenues.length;
+    setCarouselIndex(nextIdx);
+    setSelectedFeature(carouselVenues[nextIdx]);
+  };
 
   return (
     <main className="min-h-screen overflow-hidden bg-background text-foreground">
@@ -82,37 +111,46 @@ export default function Home() {
             className="group flex items-center gap-3"
             aria-label="Bar in Cairo home"
           >
-            <span className="font-serif text-2xl font-semibold tracking-[-0.05em] text-primary">
+            {/* Header Site Title: 2rem (32px) */}
+            <span className="font-serif text-[2rem] font-semibold tracking-[-0.05em] text-primary">
               bar<span className="text-accent">in</span>cairo
             </span>
-            <span className="hidden border-l border-border pl-3 font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground sm:block">
+            {/* Header Site Tagline: 11px (0.6875rem) */}
+            <span className="hidden border-l border-border pl-3 font-mono text-[0.6875rem] uppercase tracking-[0.22em] text-muted-foreground sm:block">
               The Downtown Index
             </span>
           </a>
 
+          {/* Header Menu: 12px (0.75rem) */}
           <nav
-            className={`${mobileNav ? "flex" : "hidden"} absolute left-0 right-0 top-full flex-col gap-5 border-b border-border bg-background px-5 py-5 font-mono text-[10px] uppercase tracking-[0.18em] md:static md:flex md:flex-row md:items-center md:gap-8 md:border-0 md:bg-transparent md:p-0`}
+            className={`${
+              mobileNav ? "flex" : "hidden"
+            } absolute left-0 right-0 top-full flex-col gap-5 border-b border-border bg-background px-5 py-5 font-mono text-[0.75rem] uppercase tracking-[0.18em] md:static md:flex md:flex-row md:items-center md:gap-8 md:border-0 md:bg-transparent md:p-0`}
           >
             <a
               href="#map"
+              onClick={() => setMobileNav(false)}
               className="text-muted-foreground transition-colors hover:text-primary"
             >
               Explore the map
             </a>
             <a
               href="#bar-hops"
+              onClick={() => setMobileNav(false)}
               className="text-muted-foreground transition-colors hover:text-primary"
             >
               Bar Hops
             </a>
             <a
-              href="#about"
+              href="#our-guide"
+              onClick={() => setMobileNav(false)}
               className="text-muted-foreground transition-colors hover:text-primary"
             >
               Our Guide
             </a>
             <a
               href="#subscribe"
+              onClick={() => setMobileNav(false)}
               className="border border-primary px-4 py-2 text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
             >
               WhatsApp Dispatch <ArrowUpRight className="ml-1 inline size-3" />
@@ -135,7 +173,7 @@ export default function Home() {
         className="mx-auto grid max-w-[1440px] gap-10 px-5 pb-14 pt-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:px-10 lg:pb-20 lg:pt-24"
       >
         <div>
-          <p className="mb-5 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-accent">
+          <p className="mb-5 flex items-center gap-2 font-mono text-[0.625rem] uppercase tracking-[0.22em] text-accent">
             <Compass className="size-3" /> Cairo / Egypt / 30°02′N
           </p>
           <h1 className="max-w-3xl font-serif text-[clamp(3.8rem,8vw,8.6rem)] font-semibold leading-[0.82] tracking-[-0.075em] text-primary">
@@ -148,31 +186,78 @@ export default function Home() {
         <div className="flex max-w-lg flex-col gap-6 lg:pb-2 lg:pl-14">
           <p className="font-serif text-xl leading-relaxed text-primary/80 lg:text-2xl">
             A living spatial index to the bars, backrooms, rooftop corners, and historic
-            spots of Wust El Balad, Cairo.
+            spots of{" "}
+            {/* Hero tooltip for Wust El Balad -> Downtown */}
+            <span className="group relative cursor-help underline decoration-accent decoration-dotted underline-offset-4 font-medium text-primary">
+              Wust El Balad
+              <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block bg-[#24332d] text-[#ede7d8] font-mono text-[0.6875rem] uppercase tracking-wider px-2.5 py-1 shadow-md whitespace-nowrap rounded-none border border-accent">
+                Downtown
+              </span>
+            </span>
+            , Cairo.
           </p>
-          <div className="flex items-center gap-3 border-t border-border pt-4 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-            <span className="size-2 rounded-full bg-accent" /> First Edition · PostGIS
-            Vector Stream
+          <div className="flex items-center gap-3 border-t border-border pt-4 font-mono text-[0.625rem] uppercase tracking-[0.18em] text-muted-foreground">
+            <span className="size-2 rounded-full bg-accent" /> First Edition · Python API
+            Live Stream
           </div>
         </div>
       </section>
 
-      {/* Interactive WebGL Spatial Map & Filter Controls */}
+      {/* Interactive WebGL Map & Filter Controls */}
       <section id="map" className="relative border-y border-primary/25 bg-card">
         <div className="mx-auto max-w-[1440px] px-5 py-5 lg:px-10">
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-primary/20 pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-primary/20 pb-4">
             <div className="flex items-center gap-3">
-              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
+              <span className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-primary">
                 Plate 01
               </span>
               <span className="text-muted-foreground">/</span>
-              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+              <span className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-muted-foreground">
                 Downtown · {venuesData.features.length} Spots Indexed
               </span>
             </div>
 
-            {/* Price Range Filter Pills */}
-            <div className="flex flex-wrap items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em]">
+            {/* Mobile View: Combobox Dropdown for Filters to Save Space */}
+            <div className="flex sm:hidden flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <label htmlFor="price-select" className="font-mono text-[0.6875rem] uppercase tracking-wider text-muted-foreground flex items-center gap-1 w-20">
+                  <DollarSign className="size-3" /> Price:
+                </label>
+                <select
+                  id="price-select"
+                  value={activePriceFilter}
+                  onChange={(e) => setActivePriceFilter(e.target.value)}
+                  className="flex-1 bg-background border border-primary/30 px-3 py-2 font-mono text-[0.75rem] uppercase text-primary focus:outline-none focus:border-accent"
+                >
+                  {PRICE_FILTERS.map((p) => (
+                    <option key={p.slug} value={p.slug}>
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <label htmlFor="vibe-select" className="font-mono text-[0.6875rem] uppercase tracking-wider text-muted-foreground flex items-center gap-1 w-20">
+                  <Tag className="size-3 text-accent" /> Vibe:
+                </label>
+                <select
+                  id="vibe-select"
+                  value={activeVibeFilter}
+                  onChange={(e) => setActiveVibeFilter(e.target.value)}
+                  className="flex-1 bg-background border border-primary/30 px-3 py-2 font-mono text-[0.75rem] uppercase text-primary focus:outline-none focus:border-accent"
+                >
+                  {VIBE_FILTERS.map((v) => (
+                    <option key={v.slug} value={v.slug}>
+                      {v.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Desktop View: Pill Filters */}
+            <div className="hidden sm:flex flex-wrap items-center gap-2 font-mono text-[0.625rem] uppercase tracking-[0.16em]">
               <span className="text-muted-foreground flex items-center gap-1 mr-1">
                 <DollarSign className="size-3" /> Price:
               </span>
@@ -192,8 +277,8 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Vibe Tag Filter Pills */}
-          <div className="my-4 flex flex-wrap items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em]">
+          {/* Desktop Vibe Tag Filter Pills */}
+          <div className="hidden sm:flex my-4 flex-wrap items-center gap-2 font-mono text-[0.625rem] uppercase tracking-[0.14em]">
             <span className="text-muted-foreground flex items-center gap-1 mr-1">
               <Tag className="size-3 text-accent" /> Vibes:
             </span>
@@ -212,21 +297,32 @@ export default function Home() {
             ))}
           </div>
 
-          {/* MapLibre Vector Map Canvas */}
-          <MapLibreMap
-            venues={venuesData}
-            selectedVenue={selectedFeature}
-            onSelectVenue={(venue) => setSelectedFeature(venue)}
-          />
+          {/* MapLibre Map Container */}
+          <div className="mt-4">
+            <MapLibreMap
+              venues={venuesData}
+              selectedVenue={selectedFeature}
+              onSelectVenue={(venue) => {
+                setSelectedFeature(venue);
+                if (venue) {
+                  const idx = carouselVenues.findIndex(
+                    (f) => f.properties.id === venue.properties.id
+                  );
+                  if (idx !== -1) setCarouselIndex(idx);
+                }
+              }}
+            />
+          </div>
         </div>
       </section>
 
-      {/* Selected Venue Detail Card */}
+      {/* A Good Place to Start Section (3-Venue Carousel) */}
       <section className="mx-auto grid max-w-[1440px] gap-10 px-5 py-16 lg:grid-cols-[0.7fr_1.3fr] lg:px-10 lg:py-24">
         <div className="flex flex-col justify-between gap-8">
           <div>
-            <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
-              Selected from the map
+            {/* Requirement 6.1: "Selected for the night" */}
+            <p className="mb-4 font-mono text-[0.6875rem] uppercase tracking-[0.2em] text-accent">
+              Selected for the night
             </p>
             <h2 className="font-serif text-5xl leading-[0.9] tracking-[-0.06em] text-primary lg:text-7xl">
               A good place
@@ -234,81 +330,126 @@ export default function Home() {
               <em className="font-normal">to begin.</em>
             </h2>
           </div>
-          <p className="max-w-xs font-serif text-lg leading-relaxed text-muted-foreground">
-            Start with the old centre. Let the streets decide what comes next.
-          </p>
+
+          <div className="flex flex-col gap-4">
+            <p className="max-w-xs font-serif text-lg leading-relaxed text-muted-foreground">
+              Start with the old centre. Let the streets decide what comes next.
+            </p>
+
+            {/* Carousel Navigation Controls */}
+            {carouselVenues.length > 1 && (
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handlePrevCarousel}
+                  className="flex h-11 w-11 items-center justify-center border border-primary/30 text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+                  aria-label="Previous venue"
+                >
+                  <ChevronLeft className="size-5" />
+                </button>
+
+                <span className="font-mono text-[0.75rem] text-primary/70 uppercase tracking-widest">
+                  0{carouselIndex + 1} / 0{carouselVenues.length}
+                </span>
+
+                <button
+                  onClick={handleNextCarousel}
+                  className="flex h-11 w-11 items-center justify-center border border-primary/30 text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+                  aria-label="Next venue"
+                >
+                  <ChevronRight className="size-5" />
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
-        {selectedProps && (
+        {selectedProps ? (
           <article className="grid overflow-hidden border border-primary/25 bg-card sm:grid-cols-[0.85fr_1.15fr]">
             <div
               className="min-h-72 bg-cover bg-center"
               style={{
-                backgroundImage: `url(${selectedProps.photo_url || "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=900&q=80"})`,
+                backgroundImage: `url(${
+                  selectedProps.photo_url ||
+                  "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=900&q=80"
+                })`,
               }}
               role="img"
-              aria-label={`${selectedProps.name_en} atmosphere`}
+              aria-label={`${getVenueName(selectedProps)} atmosphere`}
             />
 
             <div className="flex flex-col justify-between gap-8 p-6 lg:p-9">
               <div>
-                <div className="mb-5 flex items-start justify-between gap-3">
-                  <div>
+                {/* Mobile View Layout (8.3): Category, Pricing & Search button top row, Venue Name full width underneath */}
+                <div className="mb-5 flex flex-col gap-3">
+                  <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-accent">
+                      <span className="font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-accent">
                         {selectedProps.category_name}
                       </span>
-                      <span className="font-mono text-[10px] font-bold text-primary border border-primary/30 px-1.5 py-0.5">
+                      <span className="font-mono text-[0.6875rem] font-bold text-primary border border-primary/30 px-1.5 py-0.5">
                         {selectedProps.price_range}
                       </span>
                     </div>
-                    <h3 className="mt-2 font-serif text-4xl leading-none tracking-[-0.05em] text-primary">
-                      {selectedProps.name_en}
-                    </h3>
-                    <p className="mt-1 font-serif text-lg text-muted-foreground">
-                      {selectedProps.name_ar}
-                    </p>
+
+                    <button
+                      className="border border-primary/30 p-2 min-h-[44px] min-w-[44px] flex items-center justify-center text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+                      aria-label="Search venue details"
+                    >
+                      <Search className="size-4" />
+                    </button>
                   </div>
 
-                  <button
-                    className="border border-primary/30 p-2 min-h-[44px] min-w-[44px] flex items-center justify-center text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
-                    aria-label="Search venue details"
-                  >
-                    <Search className="size-4" />
-                  </button>
+                  {/* Venue Name full width under category/pricing/search button */}
+                  <div className="w-full">
+                    <h3 className="font-serif text-3xl sm:text-4xl leading-tight tracking-[-0.05em] text-primary">
+                      {getVenueName(selectedProps)}
+                    </h3>
+                    {selectedProps.name_ar && (
+                      <p className="mt-1 font-serif text-lg text-muted-foreground" lang="ar" dir="rtl">
+                        {selectedProps.name_ar}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
                 <p className="max-w-md font-serif text-lg leading-relaxed text-primary/80">
-                  {selectedProps.description_en}
+                  {getVenueDescription(selectedProps)}
                 </p>
               </div>
 
               <div>
                 <div className="mb-5 flex flex-wrap gap-2">
-                  <span className="border border-primary/25 px-3 py-1 font-mono text-[9px] uppercase tracking-[0.13em] text-primary">
+                  <span className="border border-primary/25 px-3 py-1 font-mono text-[0.625rem] uppercase tracking-[0.13em] text-primary">
                     {selectedProps.vibe_description || "Downtown Vibe"}
                   </span>
 
-                  {selectedProps.vibes.map((vibeSlug) => (
-                    <span
-                      key={vibeSlug}
-                      className="border border-accent/40 bg-accent/10 px-2 py-1 font-mono text-[9px] uppercase tracking-[0.13em] text-accent"
-                    >
-                      #{vibeSlug}
-                    </span>
-                  ))}
+                  {selectedProps.vibes &&
+                    selectedProps.vibes.map((vibeSlug) => (
+                      <span
+                        key={vibeSlug}
+                        className="border border-accent/40 bg-accent/10 px-2 py-1 font-mono text-[0.625rem] uppercase tracking-[0.13em] text-accent"
+                      >
+                        #{vibeSlug}
+                      </span>
+                    ))}
 
-                  <span className="border border-primary/25 px-3 py-1 font-mono text-[9px] uppercase tracking-[0.13em] text-primary">
-                    <MapPin className="mr-1 inline size-3" /> {selectedProps.address_en}
-                  </span>
+                  {getVenueAddress(selectedProps) && (
+                    <span className="border border-primary/25 px-3 py-1 font-mono text-[0.625rem] uppercase tracking-[0.13em] text-primary">
+                      <MapPin className="mr-1 inline size-3" /> {getVenueAddress(selectedProps)}
+                    </span>
+                  )}
                 </div>
 
-                <button className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-accent hover:text-primary">
+                <button className="flex items-center gap-2 font-mono text-[0.75rem] uppercase tracking-[0.16em] text-accent hover:text-primary">
                   Open full listing <ArrowUpRight className="size-3" />
                 </button>
               </div>
             </div>
           </article>
+        ) : (
+          <div className="flex min-h-[300px] items-center justify-center border border-dashed border-primary/30 p-8 text-center font-mono text-[0.75rem] uppercase tracking-widest text-muted-foreground">
+            No venues found matching selected filters. Try clearing filters.
+          </div>
         )}
       </section>
 
@@ -319,7 +460,7 @@ export default function Home() {
       >
         <div className="mx-auto grid max-w-[1440px] gap-10 lg:grid-cols-[1fr_1fr] lg:items-center">
           <div>
-            <p className="mb-5 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
+            <p className="mb-5 flex items-center gap-2 font-mono text-[0.6875rem] uppercase tracking-[0.2em] text-accent">
               <Sparkles className="size-3" /> Coming Up Next
             </p>
             <h2 className="font-serif text-5xl leading-[0.88] tracking-[-0.06em] lg:text-7xl">
@@ -334,7 +475,7 @@ export default function Home() {
               Join a small group of curious people as we follow a handpicked trail through
               Downtown’s after-hours institutions.
             </p>
-            <div className="flex flex-wrap gap-4 font-mono text-[10px] uppercase tracking-[0.16em] text-primary-foreground/70">
+            <div className="flex flex-wrap gap-4 font-mono text-[0.75rem] uppercase tracking-[0.16em] text-primary-foreground/70">
               <span className="flex items-center gap-2">
                 <Clock3 className="size-4 text-accent" /> 4 hours
               </span>
@@ -352,13 +493,15 @@ export default function Home() {
         </div>
       </section>
 
-      {/* WhatsApp Dispatch & Personal Bar Crawl Section */}
-      <section className="mx-auto max-w-[1440px] px-5 py-16 lg:px-10 lg:py-24">
-        <PersonalCrawlCard
-          whatsappNumber={CONTACT_CONFIG.WHATSAPP_NUMBER}
-          contactEmail={CONTACT_CONFIG.CONTACT_EMAIL}
-        />
-      </section>
+      {/* Ground Rules & WhatsApp Dispatch Section */}
+      <div id="our-guide" className="scroll-mt-12">
+        <section className="mx-auto max-w-[1440px] px-5 py-16 lg:px-10 lg:py-24">
+          <PersonalCrawlCard
+            whatsappNumber={CONTACT_CONFIG.WHATSAPP_NUMBER}
+            contactEmail={CONTACT_CONFIG.CONTACT_EMAIL}
+          />
+        </section>
+      </div>
 
       {/* Footer */}
       <footer id="about" className="border-t border-border px-5 py-8 lg:px-10">
@@ -366,12 +509,12 @@ export default function Home() {
           <span className="font-serif text-lg font-semibold tracking-[-0.04em] text-primary">
             bar<span className="text-accent">in</span>cairo
           </span>
-          <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground">
+          <p className="font-mono text-[0.625rem] uppercase tracking-[0.16em] text-muted-foreground">
             Made for the curious · Cairo, Egypt · 2026
           </p>
           <a
             href="#top"
-            className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground hover:text-primary"
+            className="font-mono text-[0.625rem] uppercase tracking-[0.16em] text-muted-foreground hover:text-primary"
           >
             Back to top <ChevronDown className="ml-1 inline size-3 rotate-180" />
           </a>

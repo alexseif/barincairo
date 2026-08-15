@@ -42,8 +42,8 @@ Zero credentials or secret keys are committed to version control.
 
 ```
  ┌─────────────────────────────────────────┐
- │     Next.js 16 / React 19 Frontend      │
- │  (MapLibre GL JS / Leaflet Vector Tiles)│
+ │      Vite 8 / React 19 SPA Frontend     │
+ │       (MapLibre GL JS Vector Tiles)     │
  └────────────────────┬────────────────────┘
                       │
             GeoJSON Stream API (HTTPS)
