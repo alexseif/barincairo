@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "npm run sync-schema && tsc && vite build",
+    "build": "tsc && vite build",
     "preview": "vite preview",
     "sync-schema": "PYTHONPATH=backend backend/venv/bin/python backend/scripts/export_openapi.py > openapi.json",
     "lint": "eslint .",
