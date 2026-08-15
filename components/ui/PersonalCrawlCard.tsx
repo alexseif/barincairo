@@ -85,17 +85,17 @@ export default function PersonalCrawlCard({
           </h2>
         </div>
 
-        <div className="max-w-xl lg:justify-self-end">
+        <div className="lg:justify-self-end">
           <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 font-serif leading-relaxed text-primary/90">
             <li className="flex items-start gap-4 p-4">
               <span className="flex size-8 shrink-0 items-center justify-center border border-accent/40 bg-accent/10 font-mono text-[0.75rem] font-bold text-accent">
                 01
               </span>
               <div>
-                <strong className="font-semibold text-primary text-[0.9375rem]">
+                <strong className="font-semibold text-primary ">
                   Intimate Groups (Max 6–8 people):
                 </strong>
-                <p className="mt-1 text-primary/80 text-[0.875rem] leading-snug">
+                <p className="mt-1 text-primary/80  leading-snug">
                   Downtown Cairo’s historic bars and backroom bistros have limited
                   seating. Keeping groups small ensures everyone gets a cozy table.
                 </p>
@@ -106,10 +106,10 @@ export default function PersonalCrawlCard({
                 02
               </span>
               <div>
-                <strong className="font-semibold text-primary text-[0.9375rem]">
+                <strong className="font-semibold text-primary ">
                   Experience Over Drinking:
                 </strong>
-                <p className="mt-1 text-primary/80 text-[0.875rem] leading-snug">
+                <p className="mt-1 text-primary/80  leading-snug">
                   You don’t have to finish every drink—this walk is about heritage,
                   architecture, atmosphere, and good company.
                 </p>
@@ -120,8 +120,8 @@ export default function PersonalCrawlCard({
                 03
               </span>
               <div>
-                <strong className="font-semibold text-primary text-[0.9375rem]">Local Respect:</strong>
-                <p className="mt-1 text-primary/80 text-[0.875rem] leading-snug">
+                <strong className="font-semibold text-primary ">Local Respect:</strong>
+                <p className="mt-1 text-primary/80  leading-snug">
                   We honor local venue staff, historic atmosphere, and neighborhood
                   character as welcoming guests in Downtown Cairo.
                 </p>
@@ -132,8 +132,8 @@ export default function PersonalCrawlCard({
                 04
               </span>
               <div>
-                <strong className="font-semibold text-primary text-[0.9375rem]">Tip Generously:</strong>
-                <p className="mt-1 text-primary/80 text-[0.875rem] leading-snug">
+                <strong className="font-semibold text-primary ">Tip Generously:</strong>
+                <p className="mt-1 text-primary/80  leading-snug">
                   Tip the bartenders and venue staff generously; small gestures go a long way in supporting local hospitality.
                 </p>
               </div>
