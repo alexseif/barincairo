@@ -85,6 +85,7 @@ class VenueProperties(BaseModel):
     price_range: PriceRange = Field(default="$$", description="Price level indicator")
     vibe_description: str | None = Field(default=None, max_length=255, description="Short vibe summary")
     photo_url: str | None = Field(default=None, description="Primary photo URL")
+    google_maps_url: str | None = Field(default=None, description="Google Maps URL for directions")
     category_slug: str = Field(..., min_length=1, max_length=50, description="Category slug")
     category_name: str = Field(..., min_length=1, max_length=100, description="Category display name")
     vibes: list[str] = Field(default_factory=list, description="List of associated vibe tag slugs")

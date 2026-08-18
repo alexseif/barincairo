@@ -1426,6 +1426,18 @@
             "title": "Photo Url",
             "description": "Primary photo URL"
           },
+          "google_maps_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Google Maps Url",
+            "description": "Google Maps URL for directions"
+          },
           "category_slug": {
             "type": "string",
             "maxLength": 50,

@@ -222,20 +222,65 @@ async def test_admin_venue_staging_crud():
 
 
 @pytest.mark.asyncio
-async def test_admin_scraper_view_get_and_post():
-    """Test SQLAdmin BaseView scraper menu endpoint GET form and POST extraction."""
+async def test_admin_add_venue_from_url_view():
+    """Test SQLAdmin BaseView Add Venue from URL endpoint GET, POST fetch, and POST save."""
+    test_slug = f"gmaps-test-venue-{uuid.uuid4().hex[:6]}"
     client = await get_authenticated_client()
     try:
-        res_get = await client.get("/admin/scrape")
+        # GET form 1
+        res_get = await client.get("/admin/add-venue-url")
         assert res_get.status_code == 200
-        assert "Scrape Venues" in res_get.text or "Target Area" in res_get.text or "Extract" in res_get.text
+        assert "Add Venue from Google Maps URL" in res_get.text
 
-        res_post = await client.post(
-            "/admin/scrape",
-            data={"location": "downtown", "qty": "5"},
+        # POST fetch metadata (Step 2 form)
+        res_fetch = await client.post(
+            "/admin/add-venue-url",
+            data={"action": "fetch", "url": "https://www.google.com/maps/place/Cap+D'Or/@30.045,31.245,17z"},
+        )
+        assert res_fetch.status_code == 200
+        assert "Review &amp; Create Venue" in res_fetch.text or "Review & Create Venue" in res_fetch.text
+
+        # Get valid category ID
+        async with AsyncSessionLocal() as session:
+            cat_res = await session.execute(select(Category))
+            cat = cat_res.scalars().first()
+            assert cat is not None
+            category_id = cat.id
+
+        # POST save venue (Step 3 save)
+        res_save = await client.post(
+            "/admin/add-venue-url",
+            data={
+                "action": "save",
+                "name": "GMaps Test Venue",
+                "slug": test_slug,
+                "address": "123 Talaat Harb, Cairo",
+                "google_maps_url": "https://www.google.com/maps/place/Cap+D'Or/@30.045,31.245,17z",
+                "latitude": "30.0450",
+                "longitude": "31.2450",
+                "category_id": str(category_id),
+                "price_range": "$$",
+                "working_hours": "4:00 PM - 2:00 AM",
+                "vibe_description": "Vintage classic",
+                "description": "Great place in downtown",
+            },
             follow_redirects=True,
         )
-        assert res_post.status_code == 200
+        assert res_save.status_code == 200
+
+        # Verify created in DB
+        async with AsyncSessionLocal() as session:
+            v_res = await session.execute(select(Venue).where(Venue.slug == test_slug))
+            venue = v_res.scalar_one_or_none()
+            assert venue is not None
+            assert venue.name == "GMaps Test Venue"
+            assert venue.address == "123 Talaat Harb, Cairo"
+            assert venue.latitude == 30.0450
+            assert venue.longitude == 31.2450
     finally:
+        async with AsyncSessionLocal() as session:
+            await session.execute(delete(Venue).where(Venue.slug == test_slug))
+            await session.commit()
         await client.aclose()
+
 

@@ -67,6 +67,7 @@ app.include_router(admin_scrape_router, prefix=settings.API_V1_STR, tags=["Admin
 
 
 from app.admin.views import (
+    AddVenueFromUrlAdminView,
     CategoryAdmin,
     ScraperAdminView,
     SubscriberAdmin,
@@ -81,6 +82,7 @@ from app.admin.views import (
 admin = Admin(app, engine, title="Bar in Cairo Admin", authentication_backend=authentication_backend)
 admin.add_view(UserAdmin)
 admin.add_view(VenueAdmin)
+admin.add_view(AddVenueFromUrlAdminView)
 admin.add_view(VenueStagingAdmin)
 admin.add_view(CategoryAdmin)
 admin.add_view(VibeTagAdmin)

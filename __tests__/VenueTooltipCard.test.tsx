@@ -3,6 +3,10 @@ import { describe, it, expect, vi } from 'vitest'
 import VenueTooltipCard from '@/components/map/VenueTooltipCard'
 import type { GeoJSONFeature } from '@/lib/api'
 
+vi.mock('@tanstack/react-router', () => ({
+  Link: ({ children, to, ...props }: any) => <a href={to} {...props}>{children}</a>,
+}))
+
 const mockVenue: GeoJSONFeature = {
   type: 'Feature',
   geometry: { type: 'Point', coordinates: [31.2392, 30.0418] },

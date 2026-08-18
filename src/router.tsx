@@ -4,6 +4,7 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { queryClient } from '@/lib/queryClient'
 import Home from '@/app/page'
+import VenueDetailPage from '@/app/venue/page'
 import { z } from 'zod'
 import '@/app/globals.css'
 
@@ -33,7 +34,13 @@ export const indexRoute = createRoute({
   component: Home,
 })
 
-const routeTree = rootRoute.addChildren([indexRoute])
+export const venueDetailRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/venue/$slug',
+  component: VenueDetailPage,
+})
+
+const routeTree = rootRoute.addChildren([indexRoute, venueDetailRoute])
 
 export const router = createRouter({ routeTree })
 

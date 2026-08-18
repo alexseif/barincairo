@@ -8,6 +8,7 @@ export interface VenueProperties {
   working_hours?: string
   vibe_description?: string
   photo_url?: string
+  google_maps_url?: string
   category_slug: string
   category_name: string
   vibes: string[]
@@ -93,6 +94,19 @@ export async function fetchVenuesGeoJSON(params?: {
   } catch (error) {
     // Return empty feature collection so frontend consumes Python API as source of truth
     return { type: 'FeatureCollection', features: [] }
+  }
+}
+
+export async function fetchVenueBySlug(slug: string): Promise<GeoJSONFeature | null> {
+  try {
+    const baseUrl = getApiBaseUrl()
+    const url = new URL(`/api/v1/venues/${encodeURIComponent(slug)}`, baseUrl.startsWith('http') ? baseUrl : window.location.origin)
+    const res = await fetch(url.toString())
+    if (!res.ok) return null
+    const data: GeoJSONFeature = await res.json()
+    return data
+  } catch (error) {
+    return null
   }
 }
 

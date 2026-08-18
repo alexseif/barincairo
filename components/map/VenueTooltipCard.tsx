@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowUpRight, MapPin, Tag, X } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { getVenueAddress, getVenueDescription, getVenueName, type GeoJSONFeature } from "@/lib/api";
 
 interface VenueTooltipCardProps {
@@ -76,18 +77,21 @@ export default function VenueTooltipCard({ venue, onClose }: VenueTooltipCardPro
 
       {/* Actions */}
       <div className="flex items-center justify-between border-t border-[#24332d]/20 pt-3">
+        <Link
+          to="/venue/$slug"
+          params={{ slug: p.slug }}
+          className="flex h-11 items-center gap-1 border border-[#24332d] bg-[#24332d] px-4 font-mono text-[0.625rem] uppercase tracking-widest text-[#ede7d8] transition-colors hover:bg-[#ad793b] hover:border-[#ad793b]"
+        >
+          View Details
+        </Link>
         <a
-          href={`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`}
+          href={p.google_maps_url || `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`}
           target="_blank"
           rel="noopener noreferrer"
           className="flex h-11 items-center gap-1 border border-[#24332d] px-4 font-mono text-[0.625rem] uppercase tracking-widest text-[#24332d] transition-colors hover:bg-[#24332d] hover:text-[#ede7d8]"
         >
           Directions <ArrowUpRight className="size-3" />
         </a>
-
-        <span className="font-mono text-[0.5625rem] text-[#24332d]/60">
-          {lat.toFixed(4)}°N, {lng.toFixed(4)}°E
-        </span>
       </div>
     </div>
   );

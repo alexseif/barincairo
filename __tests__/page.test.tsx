@@ -16,6 +16,7 @@ vi.mock('@/components/map/MapLibreMap', () => ({
 vi.mock('@tanstack/react-router', () => ({
   useSearch: () => ({ vibe: 'all', price_range: 'all' }),
   useNavigate: () => vi.fn(),
+  Link: ({ children, ...props }: any) => <a {...props}>{children}</a>,
 }))
 
 const mockBackendVenuesResponse: api.GeoJSONFeatureCollection = {

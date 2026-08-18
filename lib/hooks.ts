@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from '@tanstack/react-query'
-import { fetchVenuesGeoJSON, subscribeWhatsApp, GeoJSONFeatureCollection } from '@/lib/api'
+import { fetchVenuesGeoJSON, fetchVenueBySlug, subscribeWhatsApp, GeoJSONFeatureCollection, GeoJSONFeature } from '@/lib/api'
 
 export interface VenueFilters {
   category?: string
@@ -11,6 +11,15 @@ export function useVenuesQuery(filters?: VenueFilters) {
   return useQuery<GeoJSONFeatureCollection>({
     queryKey: ['venues', filters || {}],
     queryFn: () => fetchVenuesGeoJSON(filters),
+    staleTime: 60 * 1000,
+  })
+}
+
+export function useVenueDetailQuery(slug: string) {
+  return useQuery<GeoJSONFeature | null>({
+    queryKey: ['venue', slug],
+    queryFn: () => fetchVenueBySlug(slug),
+    enabled: !!slug,
     staleTime: 60 * 1000,
   })
 }

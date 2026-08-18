@@ -30,7 +30,7 @@ import ComingSoonModal from "@/components/ui/ComingSoonModal";
 import { CONTACT_CONFIG } from "@/lib/config";
 
 import { useVenuesQuery } from "@/lib/hooks";
-import { useSearch, useNavigate } from "@tanstack/react-router";
+import { useSearch, useNavigate, Link } from "@tanstack/react-router";
 
 const VIBE_FILTERS = [
   { slug: "all", name: "All Vibes" },
@@ -471,9 +471,13 @@ export default function Home() {
                   )}
                 </div>
 
-                <button className="flex items-center gap-2 font-mono text-[0.75rem] uppercase tracking-[0.16em] text-accent hover:text-primary">
+                <Link
+                  to="/venue/$slug"
+                  params={{ slug: selectedProps.slug }}
+                  className="inline-flex items-center gap-2 font-mono text-[0.75rem] uppercase tracking-[0.16em] text-accent hover:text-primary"
+                >
                   Open full listing <ArrowUpRight className="size-3" />
-                </button>
+                </Link>
               </div>
             </div>
           </article>
