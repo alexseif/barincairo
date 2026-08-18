@@ -91,19 +91,25 @@ class VenueAdmin(ModelView, model=Venue):
         form_class.longitude = FloatField("Longitude", validators=[validators.Optional()])
         return form_class
 
-    async def on_model_change(self, data: dict, model: Any, is_created: bool, request: Any) -> None:
-        lat = data.pop("latitude", None)
-        lng = data.pop("longitude", None)
-        if lat is not None:
-            model.latitude = float(lat)
-        if lng is not None:
-            model.longitude = float(lng)
+    async def get_form_data_for_edit(self, obj: Any) -> dict[str, Any]:
+        data = await super().get_form_data_for_edit(obj)
+        data["latitude"] = getattr(obj, "latitude", None)
+        data["longitude"] = getattr(obj, "longitude", None)
+        return data
 
-    async def on_form_prefill(self, form: Any, model: Any) -> None:
-        if hasattr(form, "latitude"):
-            form.latitude.data = model.latitude
-        if hasattr(form, "longitude"):
-            form.longitude.data = model.longitude
+    async def on_model_change(self, data: dict, model: Any, is_created: bool, request: Any) -> None:
+        from geoalchemy2.elements import WKTElement
+        lat_val = data.pop("latitude", None)
+        lng_val = data.pop("longitude", None)
+
+        existing_lat = getattr(model, "latitude", None)
+        existing_lng = getattr(model, "longitude", None)
+
+        lat = float(lat_val) if lat_val not in (None, "") else existing_lat
+        lng = float(lng_val) if lng_val not in (None, "") else existing_lng
+
+        if lat is not None and lng is not None:
+            model.location = WKTElement(f"POINT({lng} {lat})", srid=4326)
 
 
 class VenueStagingAdmin(ModelView, model=VenueStaging):
@@ -139,19 +145,25 @@ class VenueStagingAdmin(ModelView, model=VenueStaging):
         form_class.longitude = FloatField("Longitude", validators=[validators.Optional()])
         return form_class
 
-    async def on_model_change(self, data: dict, model: Any, is_created: bool, request: Any) -> None:
-        lat = data.pop("latitude", None)
-        lng = data.pop("longitude", None)
-        if lat is not None:
-            model.latitude = float(lat)
-        if lng is not None:
-            model.longitude = float(lng)
+    async def get_form_data_for_edit(self, obj: Any) -> dict[str, Any]:
+        data = await super().get_form_data_for_edit(obj)
+        data["latitude"] = getattr(obj, "latitude", None)
+        data["longitude"] = getattr(obj, "longitude", None)
+        return data
 
-    async def on_form_prefill(self, form: Any, model: Any) -> None:
-        if hasattr(form, "latitude"):
-            form.latitude.data = model.latitude
-        if hasattr(form, "longitude"):
-            form.longitude.data = model.longitude
+    async def on_model_change(self, data: dict, model: Any, is_created: bool, request: Any) -> None:
+        from geoalchemy2.elements import WKTElement
+        lat_val = data.pop("latitude", None)
+        lng_val = data.pop("longitude", None)
+
+        existing_lat = getattr(model, "latitude", None)
+        existing_lng = getattr(model, "longitude", None)
+
+        lat = float(lat_val) if lat_val not in (None, "") else existing_lat
+        lng = float(lng_val) if lng_val not in (None, "") else existing_lng
+
+        if lat is not None and lng is not None:
+            model.location = WKTElement(f"POINT({lng} {lat})", srid=4326)
 
 
 class VenuePhotoAdmin(ModelView, model=VenuePhoto):

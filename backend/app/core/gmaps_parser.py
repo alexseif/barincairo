@@ -71,17 +71,17 @@ async def parse_google_maps_url(url: str) -> dict[str, Any]:
     working_hours: str | None = None
     price_range: str = "$$"
 
-    # Step 2: Parse Coordinates from URL
-    at_match = re.search(r"@(-?\d+\.\d+),(-?\d+\.\d+)", final_url)
-    if at_match:
-        latitude = float(at_match.group(1))
-        longitude = float(at_match.group(2))
+    # Step 2: Parse Coordinates from URL (prioritize exact place pin !3d/!4d over viewport center @lat,lng)
+    d34_match = re.search(r"!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)", final_url)
+    if d34_match:
+        latitude = float(d34_match.group(1))
+        longitude = float(d34_match.group(2))
 
     if latitude is None or longitude is None:
-        d34_match = re.search(r"!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)", final_url)
-        if d34_match:
-            latitude = float(d34_match.group(1))
-            longitude = float(d34_match.group(2))
+        at_match = re.search(r"@(-?\d+\.\d+),(-?\d+\.\d+)", final_url)
+        if at_match:
+            latitude = float(at_match.group(1))
+            longitude = float(at_match.group(2))
 
     if latitude is None or longitude is None:
         q_match = re.search(r"[?&](?:q|ll)=(-?\d+\.\d+),(-?\d+\.\d+)", final_url)

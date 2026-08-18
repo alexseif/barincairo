@@ -167,6 +167,12 @@ async def test_admin_venue_crud_and_spatial_helpers():
         # GET detail view
         detail_res = await client.get(f"/admin/venue/details/{venue_id}")
         assert detail_res.status_code == 200
+
+        # GET edit form and verify latitude and longitude are prefilled
+        edit_res = await client.get(f"/admin/venue/edit/{venue_id}")
+        assert edit_res.status_code == 200
+        assert "30.045" in edit_res.text
+        assert "31.238" in edit_res.text
     finally:
         async with AsyncSessionLocal() as session:
             await session.execute(delete(Venue).where(Venue.slug == test_slug))
